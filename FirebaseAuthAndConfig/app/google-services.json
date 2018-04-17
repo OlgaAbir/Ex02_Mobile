@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "973957993285",
+    "firebase_url": "https://fir-authlogindemo-343be.firebaseio.com",
+    "project_id": "fir-authlogindemo-343be",
+    "storage_bucket": "fir-authlogindemo-343be.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:973957993285:android:a9336c419a0fcc82",
+        "android_client_info": {
+          "package_name": "com.deanoy.user.firebaseauthandconfig"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "973957993285-ml4rnjk8p9krnmmb67letnlmkcoslrl4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmdbGjwUx3DiI75ZQnBaMZXfQLMTCJoSE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
