@@ -37,7 +37,7 @@
         app:layout_constraintVertical_bias="0.271" />
 
     <TextView
-        android:id="@+id/tvUserDetails"
+        android:id="@+id/tvUserInfo"
         android:layout_width="125dp"
         android:layout_height="32dp"
         android:layout_marginBottom="8dp"
