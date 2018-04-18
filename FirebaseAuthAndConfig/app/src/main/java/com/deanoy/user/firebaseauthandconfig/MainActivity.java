@@ -8,14 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import android.app.Activity;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -24,7 +17,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,10 +39,17 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // Bind UI
+        this.bindUI();
+    }
+
+    private void bindUI() {
+        //Email/Password auth
         this.metEmail = findViewById(R.id.etEmail);
         this.metPassword = findViewById(R.id.etPassword);
         this.mtvUserDetails = findViewById(R.id.tvUserDetails);
         this.mAuth = FirebaseAuth.getInstance();
+
+        //Google auth
         this.mGoogleSignInButton = findViewById(R.id.sign_in_button);
         this.mGoogleSignInButton .setSize(SignInButton.SIZE_STANDARD);
         this.mGoogleSignInButton.setOnClickListener(new View.OnClickListener() {
@@ -77,14 +76,14 @@ public class MainActivity extends Activity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        this.updateUserDetailsUI(currentUser);
+        this.updateUserUIDetails(currentUser);
     }
 
     // On Clicks
     public void onSignOutClick(View v) {
         Log.e(TAG, "onSignoutClick >>");
         mAuth.signOut();
-        this.updateUserDetailsUI(mAuth.getCurrentUser());
+        this.updateUserUIDetails(mAuth.getCurrentUser());
         Log.e(TAG, "onSignoutClick <<");
     }
 
@@ -99,13 +98,13 @@ public class MainActivity extends Activity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.e(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUserDetailsUI(user);
+                            updateUserUIDetails(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.e(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(getApplicationContext(), "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUserDetailsUI(null);
+                            updateUserUIDetails(null);
                         }
                     }
         });
@@ -122,13 +121,13 @@ public class MainActivity extends Activity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.e(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUserDetailsUI(user);
+                            updateUserUIDetails(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.e(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(MainActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUserDetailsUI(null);
+                            updateUserUIDetails(null);
                         }
 
                         // ...
@@ -138,7 +137,7 @@ public class MainActivity extends Activity {
     }
 
     //Helper functions
-    private void updateUserDetailsUI(FirebaseUser currentUser) {
+    private void updateUserUIDetails(FirebaseUser currentUser) {
         if(currentUser == null) {
             mtvUserDetails.setText("Signed out");
         } else {
@@ -167,12 +166,12 @@ public class MainActivity extends Activity {
 
             // Signed in successfully, show authenticated UI.
             Log.e(TAG, "signInResult:success");
-            updateUserDetailsUI(mAuth.getCurrentUser());
+            updateUserUIDetails(mAuth.getCurrentUser());
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.e(TAG, "signInResult:failed code=" + e.getStatusCode());
-            updateUserDetailsUI(null);
+            updateUserUIDetails(null);
         }
     }
 }
