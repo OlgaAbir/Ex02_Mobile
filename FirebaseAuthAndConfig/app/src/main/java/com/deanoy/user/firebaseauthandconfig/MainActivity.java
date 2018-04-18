@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
     private EditText metEmail;
     private EditText metPassword;
     private TextView mtvUserDetails;
-    private GoogleSignInOptions gso;
+    private GoogleSignInOptions mGoogleSignInOptions;
     private GoogleSignInClient mGoogleSignInClient;
     private SignInButton mGoogleSignInButton;
 
@@ -51,7 +51,7 @@ public class MainActivity extends Activity {
         this.metPassword = findViewById(R.id.etPassword);
         this.mtvUserDetails = findViewById(R.id.tvUserDetails);
         this.mAuth = FirebaseAuth.getInstance();
-        this.mGoogleSignInButton = findViewById(R.id.sign_in_button);
+        this.mGoogleSignInButton = findViewById(R.id.btnGoogleSignIn);
         this.mGoogleSignInButton .setSize(SignInButton.SIZE_STANDARD);
         this.mGoogleSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,11 +65,11 @@ public class MainActivity extends Activity {
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        mGoogleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
         // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mGoogleSignInClient = GoogleSignIn.getClient(this, mGoogleSignInOptions);
     }
 
     @Override
