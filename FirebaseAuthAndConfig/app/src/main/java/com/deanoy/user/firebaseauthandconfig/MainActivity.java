@@ -124,8 +124,8 @@ public class MainActivity extends Activity {
         super.onStart();
 
         // Check if user is signed in (non-null) and update UI accordingly.
-        //FirebaseUser currentUser = mAuth.getCurrentUser();
-        //updateUserDetailsUI(currentUser);
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUserDetailsUI(currentUser);
     }
 
     // On Clicks
@@ -349,7 +349,7 @@ public class MainActivity extends Activity {
     {
         String password = metPassword.getText().toString();
 
-        return password != null && password.length() >= 6;
+        return !password.isEmpty() && password.length() >= 6;
     }
 
     private boolean isMatchingPattern(String value, String patternStr)
