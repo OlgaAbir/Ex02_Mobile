@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FirebaseAuthAndConfig</string>
+    <string name="facebook_app_id">589626191414618</string>
+    <string name="fb_login_protocol_scheme">fb589626191414618</string>
 </resources>
