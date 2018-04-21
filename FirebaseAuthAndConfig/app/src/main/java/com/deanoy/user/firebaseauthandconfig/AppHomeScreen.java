@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +25,8 @@ public class AppHomeScreen extends Activity {
     private TextView mUserName;
     private ImageView mUserProfilePicture;
     private TextView mUserEmail;
+    private Button mbtnChangePassword;
+    private Button mbtnVerifyEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,7 +40,8 @@ public class AppHomeScreen extends Activity {
         mUserProfilePicture = findViewById(R.id.ivProfilePicture);
         mLoggedInUser = mAuth.getCurrentUser();
         mUserEmail = findViewById(R.id.tvEmailAddress);
-
+        mbtnChangePassword = findViewById(R.id.btnChangePassword);
+        mbtnVerifyEmail = findViewById(R.id.btnVerifyEmail);
         displayLoggedInUserProfile();
     }
 
@@ -45,6 +49,10 @@ public class AppHomeScreen extends Activity {
     {
         if(mLoggedInUser != null && !mLoggedInUser.isAnonymous())
         {
+            mbtnVerifyEmail.setVisibility(View.VISIBLE);
+            mbtnChangePassword.setVisibility(View.VISIBLE);
+            mUserEmail.setVisibility(View.VISIBLE);
+
             if(mLoggedInUser.getDisplayName() == null || mLoggedInUser.getDisplayName().isEmpty())
             {
                 mUserName.setText("Display Name: unconfigured");
@@ -63,6 +71,13 @@ public class AppHomeScreen extends Activity {
             {
                 mUserEmail.setText("Email: " + mLoggedInUser.getEmail());
             }
+        }
+        else if(mLoggedInUser.isAnonymous()) // Set anonymous user UI
+        {
+            mUserName.setText("Anonymous");
+            mbtnVerifyEmail.setVisibility(View.INVISIBLE);
+            mbtnChangePassword.setVisibility(View.INVISIBLE);
+            mUserEmail.setVisibility(View.INVISIBLE);
         }
     }
 

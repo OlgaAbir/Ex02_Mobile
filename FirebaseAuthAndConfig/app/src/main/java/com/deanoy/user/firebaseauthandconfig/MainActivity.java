@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -56,10 +57,9 @@ public class MainActivity extends Activity {
     @Override
     public void onStart() {
         super.onStart();
-
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUserDetailsUI(currentUser);
+        displayUserDetails(currentUser);
     }
 
     // On Clicks
@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.e(TAG, "signInWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                updateUserDetailsUI(user);
+                                displayUserDetails(user);
                             }
                             else
                             {
@@ -102,10 +102,35 @@ public class MainActivity extends Activity {
         Log.e(TAG, "onSignInClick <<");
     }
 
-    public void onForgotPassword(View v) {
+    public void onForgotPasswordClick(View v) {
         Intent forgotPasswordIntent = new Intent(this, PasswordResetActivity.class);
         forgotPasswordIntent.putExtra(EMAIL_DATA, metEmail.getText().toString());
         startActivity(forgotPasswordIntent);
+    }
+
+    public void onSkipClick(View v) {
+        Log.e(TAG, "onSignInClick >>");
+        mAuth.signInAnonymously()
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInAnonymously:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            displayUserDetails(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInAnonymously:failure", task.getException());
+                            Toast.makeText(MainActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                        // ...
+                    }
+                });
+        Log.e(TAG, "onSignInClick <<");
+
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -193,9 +218,10 @@ public class MainActivity extends Activity {
     }
 
     // Helper functions
-    private void updateUserDetailsUI(FirebaseUser currentUser) {
+    private void displayUserDetails(FirebaseUser currentUser) {
         if(currentUser != null)
         {
+            Log.e(TAG, "User is online. Displaying home screen");
             startDisplayHomeScreen();
         }
     }
@@ -238,7 +264,7 @@ public class MainActivity extends Activity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUserDetailsUI(user);
+                            displayUserDetails(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -263,13 +289,12 @@ public class MainActivity extends Activity {
                             Toast.makeText(MainActivity.this, "Facebook authentication success",
                                     Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUserDetailsUI(user);
+                            displayUserDetails(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.e(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(MainActivity.this, "Facebook authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUserDetailsUI(null);
                         }
                     }
                 });
