@@ -3,11 +3,15 @@ package com.deanoy.user.firebaseauthandconfig;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -72,10 +76,31 @@ public class AppHomeScreen extends Activity {
         Log.e(TAG, "onSignoutClick <<");
     }
 
+    public void onChangePasswordClick(View v)
+    {
+        Intent i = new Intent(getApplicationContext(), ChangePasswordActivity.class);
+
+        startActivity(i);
+    }
+
+    public void onVerifyEmailClick(View v)
+    {
+        mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                displayMessage("A verification message was sent to your mail.");
+            }
+        });
+    }
+
     private void startDisplayLoginScreen()
     {
         Intent i = new Intent(getApplicationContext(), MainActivity.class);
 
         startActivity(i);
+    }
+
+    private void displayMessage(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 }
