@@ -19,6 +19,7 @@ public class AppHomeScreen extends Activity {
     private FirebaseUser mLoggedInUser;
     private TextView mUserName;
     private ImageView mUserProfilePicture;
+    private TextView mUserEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -31,13 +32,14 @@ public class AppHomeScreen extends Activity {
         mUserName =  findViewById(R.id.tvUserName);
         mUserProfilePicture = findViewById(R.id.ivProfilePicture);
         mLoggedInUser = mAuth.getCurrentUser();
+        mUserEmail = findViewById(R.id.tvEmailAddress);
 
         displayLoggedInUserProfile();
     }
 
     private void displayLoggedInUserProfile()
     {
-        if(mLoggedInUser != null)
+        if(mLoggedInUser != null && !mLoggedInUser.isAnonymous())
         {
             if(mLoggedInUser.getDisplayName() == null || mLoggedInUser.getDisplayName().isEmpty())
             {
@@ -48,9 +50,14 @@ public class AppHomeScreen extends Activity {
                 mUserName.setText(mLoggedInUser.getDisplayName());
             }
 
-            if(mLoggedInUser.getPhotoUrl() != null)
+            if(mLoggedInUser.getPhotoUrl() != null && !mLoggedInUser.getPhotoUrl().toString().isEmpty())
             {
                 mUserProfilePicture.setImageURI(mLoggedInUser.getPhotoUrl());
+            }
+
+            if(mLoggedInUser.getEmail() != null && !mLoggedInUser.getEmail().isEmpty())
+            {
+                mUserEmail.setText("Email: " + mLoggedInUser.getEmail());
             }
         }
     }

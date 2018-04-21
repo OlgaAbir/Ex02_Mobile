@@ -2,12 +2,11 @@ package com.deanoy.user.firebaseauthandconfig;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import android.support.annotation.NonNull;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -31,8 +30,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class MainActivity extends Activity {
     private static int RC_SIGN_IN = 1;
@@ -69,37 +66,14 @@ public class MainActivity extends Activity {
     public void onSignUpClick(View v) {
         Log.e(TAG, "onSignUpClick >>");
 
-        if(isValidInputCredentials())
-        {
-            mAuth.createUserWithEmailAndPassword(metEmail.getText().toString(), metPassword.getText().toString())
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task)
-                        {
-                            Log.e(TAG, "on mAuth signup complete >>");
-                            if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                Log.e(TAG, "createUserWithEmail:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                updateUserDetailsUI(user);
-                            }
-                            else
-                            {
-                                // If sign in fails, display a message to the user.
-                                Log.e(TAG, "createUserWithEmail:failure", task.getException());
-                                Toast.makeText(getApplicationContext(), "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
-                                updateUserDetailsUI(null);
-                            }
-                        }
-                    });
-        }
+        startDisplaySignUpScreen();
 
         Log.e(TAG, "onSignUpClick <<");
     }
 
     public void onSignInClick(View v) {
         Log.e(TAG, "onSignInClick >>");
+
         if(isValidInputCredentials())
         {
             mAuth.signInWithEmailAndPassword(metEmail.getText().toString(), metPassword.getText().toString())
@@ -181,6 +155,7 @@ public class MainActivity extends Activity {
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         mGoogleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
+                .requestProfile()
                 .requestEmail()
                 .build();
         // Build a GoogleSignInClient with the options specified by gso.
@@ -209,7 +184,6 @@ public class MainActivity extends Activity {
             @Override
             public void onError(FacebookException error) {
                 Log.e(TAG, "facebook:onError", error);
-                // ...
             }
         });
     }
@@ -228,6 +202,13 @@ public class MainActivity extends Activity {
 
     private void startDisplayHomeScreen() {
         Intent i = new Intent(getApplicationContext(), AppHomeScreen.class);
+
+        startActivity(i);
+    }
+
+    private void startDisplaySignUpScreen()
+    {
+        Intent i = new Intent(getApplicationContext(), SignUpActivity.class);
 
         startActivity(i);
     }
@@ -279,7 +260,7 @@ public class MainActivity extends Activity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.e(TAG, "signInWithCredential:success");
-                            Toast.makeText(MainActivity.this, "Facebook authentication failed.",
+                            Toast.makeText(MainActivity.this, "Facebook authentication success",
                                     Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUserDetailsUI(user);
@@ -290,8 +271,6 @@ public class MainActivity extends Activity {
                                     Toast.LENGTH_SHORT).show();
                             updateUserDetailsUI(null);
                         }
-
-                        // ...
                     }
                 });
     }
@@ -304,52 +283,12 @@ public class MainActivity extends Activity {
             result = false;
         }
 
-        if(result && !isValidEmailAddress())
-        {
-            displayMessage("The Email you entered is not in correct email format");
-            result = false;
-        }
-
         if(result && metPassword.getText().toString().isEmpty())
         {
             displayMessage("You should enter your password in the password field");
             result = false;
         }
 
-        if(result && !isValidPassword())
-        {
-            displayMessage("You should enter a password that contains at least 6 characters");
-            result = false;
-        }
-
-        if(result) {
-            displayMessage("Valid log in details");
-        }
         return result;
-    }
-
-    private boolean isValidEmailAddress() {
-        String email = metEmail.getText().toString();
-        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-        Boolean result = false;
-
-        if(!email.isEmpty())
-        {
-            result = isMatchingPattern(email, emailPattern);
-        }
-
-        return result;
-    }
-
-    private boolean isValidPassword() {
-        String password = metPassword.getText().toString();
-
-        return !password.isEmpty() && password.length() >= 6;
-    }
-
-    private boolean isMatchingPattern(String value, String patternStr) {
-        Pattern pattern = Pattern.compile(patternStr, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(value);
-        return matcher.matches();
     }
 }
