@@ -28,6 +28,8 @@ import java.util.regex.Pattern;
 
 public class SignUpActivity extends Activity {
     private static String TAG = "SignUpActivity";
+    private static final String EMAIL_DATA = "email_data";
+    private static final String PASSWORD_DATA = "password_data";
     public final static int IMG_RESULT = 1001;
 
     private FirebaseAuth mAuth;
@@ -43,6 +45,7 @@ public class SignUpActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        // Bind UI
         mAuth = FirebaseAuth.getInstance();
         mDisplayName = findViewById(R.id.etDisplayName);
         mEmail = findViewById(R.id.etEmail);
@@ -50,6 +53,13 @@ public class SignUpActivity extends Activity {
         mAvatar = findViewById(R.id.ivAvatar);
         mNotRobotCheckBox = findViewById(R.id.cbNotRobot);
         mImageURI = new String();
+
+        // Init UI
+        Intent intent = getIntent();
+        String email = intent.getStringExtra(EMAIL_DATA);
+        mEmail.setText(email);
+        String password = intent.getStringExtra(PASSWORD_DATA);
+        mPassword.setText(password);
     }
 
     public void onSignUpClick(View v) {

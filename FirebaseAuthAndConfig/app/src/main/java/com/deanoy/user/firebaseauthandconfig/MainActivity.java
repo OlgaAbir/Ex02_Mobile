@@ -13,6 +13,7 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -39,6 +40,7 @@ public class MainActivity extends Activity {
     private static String TAG = "MainActivity";
     private static final String EMAIL = "email";
     private static final String EMAIL_DATA = "email_data";
+    private static final String PASSWORD_DATA = "password_data";
     private static final String ENABLE_ANONYMOUS_SIGNIN = "enable_anonymous_signin";
 
     //Firebase
@@ -78,6 +80,7 @@ public class MainActivity extends Activity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         displayUserDetails(currentUser);
         setUI();
+
         Log.e(TAG, "onStart <<");
     }
 
@@ -231,7 +234,6 @@ public class MainActivity extends Activity {
             @Override
             public void onCancel() {
                 Log.e(TAG, "facebook:onCancel");
-                // ...
             }
 
             @Override
@@ -325,9 +327,13 @@ public class MainActivity extends Activity {
 
     private void startDisplaySignUpScreen()
     {
-        Intent i = new Intent(getApplicationContext(), SignUpActivity.class);
+        Intent signUpIntent = new Intent(getApplicationContext(), SignUpActivity.class);
 
-        startActivity(i);
+        // Transfer email/password data to sign up activity
+        signUpIntent.putExtra(EMAIL_DATA, metEmail.getText().toString());
+        signUpIntent.putExtra(PASSWORD_DATA, metPassword.getText().toString());
+
+        startActivity(signUpIntent);
     }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
@@ -384,6 +390,7 @@ public class MainActivity extends Activity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.e(TAG, "signInWithCredential:failure", task.getException());
+                            LoginManager.getInstance().logOut(); // Can't log into firebase, log out of facebook
                             Toast.makeText(MainActivity.this, "Facebook authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }

@@ -21,12 +21,14 @@ public class PasswordResetActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.e(TAG, "onCreate >>");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_reset);
         bindUI();
         Intent intent = getIntent();
         String email = intent.getStringExtra(EMAIL_DATA);
         metEmail.setText(email);
+
         Log.e(TAG, "onCreate <<");
     }
 

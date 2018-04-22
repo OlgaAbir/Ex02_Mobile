@@ -11,14 +11,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 
 public class AppHomeScreen extends Activity {
 
     private static String TAG = "AppHomeScreen";
+    private static String FACEBOOK_AUTH = "facebook.com";
+    private static String GMAIL_AUTH = "google.com";
+
 
     private FirebaseAuth mAuth;
     private FirebaseUser mLoggedInUser;
@@ -31,6 +36,8 @@ public class AppHomeScreen extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        Log.e(TAG, "onCreate >>");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_home_screen);
 
@@ -42,33 +49,73 @@ public class AppHomeScreen extends Activity {
         mUserEmail = findViewById(R.id.tvEmailAddress);
         mbtnChangePassword = findViewById(R.id.btnChangePassword);
         mbtnVerifyEmail = findViewById(R.id.btnVerifyEmail);
+        setUI();
+
+        Log.e(TAG, "onCreate <<");
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.e(TAG, "onDestroy >>");
+
+        super.onDestroy();
+        signOut();
+
+        Log.e(TAG, "onDestroy <<");
+    }
+
+    private void setUI() {
         displayLoggedInUserProfile();
+        // User signed in using facebook/google.
+        if(isUsingAuthMethod(FACEBOOK_AUTH) || isUsingAuthMethod(GMAIL_AUTH)) {
+            // Set UI accordingly
+            mbtnChangePassword.setVisibility(View.INVISIBLE);
+        } else {
+            mbtnChangePassword.setVisibility(View.VISIBLE);
+        }
+    }
+
+    // Check if the user is logged in using the auth type in the parameter
+    private boolean isUsingAuthMethod(String authType) {
+        boolean isUsingAuthMethod = false;
+
+        for (UserInfo user : FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
+            if (user.getProviderId().equals(authType)) {
+                Log.e(TAG, "User is signed in with " + authType);
+                isUsingAuthMethod = true;
+            }
+        }
+
+        return isUsingAuthMethod;
     }
 
     private void displayLoggedInUserProfile()
     {
-        if(mLoggedInUser != null && !mLoggedInUser.isAnonymous())
+        if(mLoggedInUser != null && !mLoggedInUser.isAnonymous()) // None anonymous user
         {
             mbtnVerifyEmail.setVisibility(View.VISIBLE);
             mbtnChangePassword.setVisibility(View.VISIBLE);
             mUserEmail.setVisibility(View.VISIBLE);
 
-            if(mLoggedInUser.getDisplayName() == null || mLoggedInUser.getDisplayName().isEmpty())
+            if(mLoggedInUser.getDisplayName() == null || mLoggedInUser.getDisplayName().isEmpty()) // no available name
             {
                 mUserName.setText("Display Name: unconfigured");
             }
             else
             {
+                Log.e(TAG, "onCreate >> User name: " + mLoggedInUser.getDisplayName());
                 mUserName.setText(mLoggedInUser.getDisplayName());
             }
 
             if(mLoggedInUser.getPhotoUrl() != null && !mLoggedInUser.getPhotoUrl().toString().isEmpty())
             {
+                Log.e(TAG, "onCreate >> User profile pic url: " + mLoggedInUser.getPhotoUrl());
                 mUserProfilePicture.setImageURI(mLoggedInUser.getPhotoUrl());
             }
 
             if(mLoggedInUser.getEmail() != null && !mLoggedInUser.getEmail().isEmpty())
             {
+                Log.e(TAG, "onCreate >> User email: " + mLoggedInUser.getEmail());
                 mUserEmail.setText("Email: " + mLoggedInUser.getEmail());
             }
         }
@@ -85,10 +132,20 @@ public class AppHomeScreen extends Activity {
     {
         Log.e(TAG, "onSignoutClick >>");
 
-        mAuth.signOut();
-        startDisplayLoginScreen();
+        signOut();
+        finish();
 
         Log.e(TAG, "onSignoutClick <<");
+    }
+
+    private void signOut() {
+        Log.e(TAG, "signOut >>");
+
+        mAuth.signOut();
+        // Log out from facebook
+        LoginManager.getInstance().logOut();
+
+        Log.e(TAG, "signOut <<");
     }
 
     public void onChangePasswordClick(View v)
@@ -106,13 +163,6 @@ public class AppHomeScreen extends Activity {
                 displayMessage("A verification message was sent to your mail.");
             }
         });
-    }
-
-    private void startDisplayLoginScreen()
-    {
-        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-
-        startActivity(i);
     }
 
     private void displayMessage(String message) {
