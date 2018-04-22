@@ -29,6 +29,8 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.util.Arrays;
 
@@ -37,29 +39,46 @@ public class MainActivity extends Activity {
     private static String TAG = "MainActivity";
     private static final String EMAIL = "email";
     private static final String EMAIL_DATA = "email_data";
+    private static final String ENABLE_ANONYMOUS_SIGNIN = "enable_anonymous_signin";
 
+    //Firebase
     private FirebaseAuth mAuth;
+    private FirebaseRemoteConfig mFirebaseRemoteConfig;
+
+    // UI
     private EditText metEmail;
     private EditText metPassword;
+    private Button mbtnSkip;
     private GoogleSignInOptions mGoogleSignInOptions;
     private GoogleSignInClient mGoogleSignInClient;
     private SignInButton mGoogleSignInButton;
     private CallbackManager mFacebookCallbackManager;
     private LoginButton mFacebookLoginButton;
 
+    private boolean mIsAnonymousSignInEnabled;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e(TAG, "onCreate >>");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initFirebaseServices();
         bindUI();
+
+        Log.e(TAG, "onCreate <<");
     }
 
     @Override
     public void onStart() {
+        Log.e(TAG, "onStart >>");
+
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         displayUserDetails(currentUser);
+        setUI();
+        Log.e(TAG, "onStart <<");
     }
 
     // On Clicks
@@ -153,13 +172,22 @@ public class MainActivity extends Activity {
 
     // UI
     private void bindUI() {
+        mbtnSkip = findViewById(R.id.btnSkip);
         //Email/Password auth
         metEmail = findViewById(R.id.etEmail);
         metPassword = findViewById(R.id.etPassword);
-        mAuth = FirebaseAuth.getInstance();
 
+        // Google/Facebook auth
         initGoogleAuth();
         initFacebookAuth();
+    }
+
+    private void setUI() {
+        if(mIsAnonymousSignInEnabled) {
+            mbtnSkip.setVisibility(View.VISIBLE);
+        } else {
+            mbtnSkip.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void initGoogleAuth() {
@@ -218,6 +246,69 @@ public class MainActivity extends Activity {
     }
 
     // Helper functions
+    private void initFirebaseServices() {
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        initConfig();
+    }
+
+    private void initConfig() {
+        Log.e(TAG, "initConfig >>");
+        // Create a Remote Config Setting to enable developer mode, which you can use to increase
+        // the number of fetches available per hour during development.
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(BuildConfig.DEBUG)
+                .build();
+        mFirebaseRemoteConfig.setConfigSettings(configSettings);
+        mFirebaseRemoteConfig.setDefaults(R.xml.default_remote_config);
+        fetchConfig();
+        Log.e(TAG, "initConfig <<");
+    }
+
+    private void fetchConfig() {
+         mIsAnonymousSignInEnabled = mFirebaseRemoteConfig.getBoolean(ENABLE_ANONYMOUS_SIGNIN);
+        Log.e(TAG, "fetchConfig >> is anonymous signin enabled: " + mIsAnonymousSignInEnabled);
+
+        long cacheExpiration = 3600; // 1 hour in seconds.
+        // If your app is using developer mode, cacheExpiration is set to 0, so each fetch will
+        // retrieve values from the service.
+        if (mFirebaseRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
+            Log.e(TAG, "fetchConfig >> remote config in debug mode");
+            cacheExpiration = 0;
+        }
+
+        // cacheExpirationSeconds is set to cacheExpiration here, indicating the next fetch request
+        // will use fetch data from the Remote Config service, rather than cached parameter values,
+        // if cached parameter values are more than cacheExpiration seconds old.
+        // See Best Practices in the README for more information.
+        mFirebaseRemoteConfig.fetch(cacheExpiration)
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.e(TAG, "FirebaseRemoteConfig:fetch:Complete >>");
+
+                        if (task.isSuccessful()) {
+                            Toast.makeText(MainActivity.this, "Fetch Succeeded",
+                                    Toast.LENGTH_SHORT).show(); //TODO: remove toast, for debuging only
+                            // After config data is successfully fetched, it must be activated before newly fetched
+                            // values are returned.
+                            mFirebaseRemoteConfig.activateFetched();
+                        } else {
+                            Toast.makeText(MainActivity.this, "Fetch Failed",
+                                    Toast.LENGTH_SHORT).show(); //TODO: remove toast, for debuging only
+                        }
+                        assignFetchedConfig();
+                        setUI();
+                        Log.e(TAG, "FirebaseRemoteConfig:fetch:Complete <<");
+                    }
+                });
+    }
+
+    private void assignFetchedConfig() {
+        mIsAnonymousSignInEnabled = mFirebaseRemoteConfig.getBoolean(ENABLE_ANONYMOUS_SIGNIN);
+        Log.e(TAG, "assignFetchedConfig >> is anonymous sign in enabled: " + mIsAnonymousSignInEnabled);
+    }
+
     private void displayUserDetails(FirebaseUser currentUser) {
         if(currentUser != null)
         {
@@ -299,6 +390,7 @@ public class MainActivity extends Activity {
                     }
                 });
     }
+
     private boolean isValidInputCredentials() {
         boolean result = true;
 
