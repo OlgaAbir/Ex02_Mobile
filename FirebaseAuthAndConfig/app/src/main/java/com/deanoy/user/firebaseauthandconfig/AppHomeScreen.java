@@ -2,6 +2,10 @@ package com.deanoy.user.firebaseauthandconfig;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -17,13 +21,42 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
 
 public class AppHomeScreen extends Activity {
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
 
     private static String TAG = "AppHomeScreen";
     private static String FACEBOOK_AUTH = "facebook.com";
     private static String GMAIL_AUTH = "google.com";
-
 
     private FirebaseAuth mAuth;
     private FirebaseUser mLoggedInUser;
@@ -67,11 +100,16 @@ public class AppHomeScreen extends Activity {
     private void setUI() {
         displayLoggedInUserProfile();
         // User signed in using facebook/google.
-        if(isUsingAuthMethod(FACEBOOK_AUTH) || isUsingAuthMethod(GMAIL_AUTH)) {
+        if(isUsingAuthMethod(FACEBOOK_AUTH) || isUsingAuthMethod(GMAIL_AUTH) || mLoggedInUser.isAnonymous()) {
             // Set UI accordingly
             mbtnChangePassword.setVisibility(View.INVISIBLE);
+            mbtnVerifyEmail.setVisibility(View.INVISIBLE);
         } else {
             mbtnChangePassword.setVisibility(View.VISIBLE);
+            mbtnVerifyEmail.setVisibility(View.VISIBLE);
+        }
+        if(mLoggedInUser.isEmailVerified()){
+            mbtnVerifyEmail.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -93,9 +131,9 @@ public class AppHomeScreen extends Activity {
     {
         if(mLoggedInUser != null && !mLoggedInUser.isAnonymous()) // None anonymous user
         {
-            mbtnVerifyEmail.setVisibility(View.VISIBLE);
             mbtnChangePassword.setVisibility(View.VISIBLE);
             mUserEmail.setVisibility(View.VISIBLE);
+            Log.e(TAG, "isEmailVerified << "+ mLoggedInUser.isEmailVerified());
 
             if(mLoggedInUser.getDisplayName() == null || mLoggedInUser.getDisplayName().isEmpty()) // no available name
             {
@@ -110,7 +148,17 @@ public class AppHomeScreen extends Activity {
             if(mLoggedInUser.getPhotoUrl() != null && !mLoggedInUser.getPhotoUrl().toString().isEmpty())
             {
                 Log.e(TAG, "onCreate >> User profile pic url: " + mLoggedInUser.getPhotoUrl());
-                mUserProfilePicture.setImageURI(mLoggedInUser.getPhotoUrl());
+
+                String imageString = mLoggedInUser.getPhotoUrl().toString();
+
+                if(isUsingAuthMethod(FACEBOOK_AUTH)){
+                    imageString = mLoggedInUser.getPhotoUrl().toString() + "/picture?width=200&height=200";
+                }
+                new DownloadImageTask(mUserProfilePicture)
+                        .execute(imageString);
+                if(!((isUsingAuthMethod(FACEBOOK_AUTH) || isUsingAuthMethod(GMAIL_AUTH)))) {
+                    mUserProfilePicture.setImageURI(mLoggedInUser.getPhotoUrl());
+                }
             }
 
             if(mLoggedInUser.getEmail() != null && !mLoggedInUser.getEmail().isEmpty())
