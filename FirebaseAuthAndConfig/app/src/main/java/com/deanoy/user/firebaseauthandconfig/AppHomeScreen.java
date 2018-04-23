@@ -154,9 +154,11 @@ public class AppHomeScreen extends Activity {
                 if(isUsingAuthMethod(FACEBOOK_AUTH)){
                     imageString = mLoggedInUser.getPhotoUrl().toString() + "/picture?width=200&height=200";
                 }
-                new DownloadImageTask(mUserProfilePicture)
-                        .execute(imageString);
-                if(!((isUsingAuthMethod(FACEBOOK_AUTH) || isUsingAuthMethod(GMAIL_AUTH)))) {
+                if((isUsingAuthMethod(FACEBOOK_AUTH) || isUsingAuthMethod(GMAIL_AUTH))) {
+                    new DownloadImageTask(mUserProfilePicture)
+                            .execute(imageString);
+                }
+                else{
                     mUserProfilePicture.setImageURI(mLoggedInUser.getPhotoUrl());
                 }
             }
