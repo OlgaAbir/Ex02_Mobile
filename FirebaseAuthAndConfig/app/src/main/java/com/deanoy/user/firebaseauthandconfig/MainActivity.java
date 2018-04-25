@@ -175,10 +175,10 @@ public class MainActivity extends Activity {
 
     // UI
     private void bindUI() {
-        mbtnSkip = findViewById(R.id.btnSkip);
+        mbtnSkip = findViewById(R.id.btnSkipMainActivity);
         //Email/Password auth
-        metEmail = findViewById(R.id.etEmail);
-        metPassword = findViewById(R.id.etPassword);
+        metEmail = findViewById(R.id.etEmailMainActivity);
+        metPassword = findViewById(R.id.etPasswordMainActivity);
 
         // Google/Facebook auth
         initGoogleAuth();
@@ -195,7 +195,7 @@ public class MainActivity extends Activity {
 
     private void initGoogleAuth() {
         //Google auth
-        mGoogleSignInButton = findViewById(R.id.btnGoogleSignIn);
+        mGoogleSignInButton = findViewById(R.id.btnGoogleSignInMainActivity);
         mGoogleSignInButton .setSize(SignInButton.SIZE_STANDARD);
         mGoogleSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,8 +219,7 @@ public class MainActivity extends Activity {
     }
 
     private void initFacebookAuth() {
-        mFacebookCallbackManager = CallbackManager.Factory.create();
-        mFacebookLoginButton = findViewById(R.id.login_button);
+        mFacebookLoginButton = findViewById(R.id.btnFacebookLoginMainActivity);
         // Set facebook permissions here
         mFacebookLoginButton.setReadPermissions(Arrays.asList(EMAIL));
         // Callback registration
@@ -251,6 +250,7 @@ public class MainActivity extends Activity {
     private void initFirebaseServices() {
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         mAuth = FirebaseAuth.getInstance();
+        mFacebookCallbackManager = CallbackManager.Factory.create();
         initConfig();
     }
 
@@ -290,14 +290,13 @@ public class MainActivity extends Activity {
                         Log.e(TAG, "FirebaseRemoteConfig:fetch:Complete >>");
 
                         if (task.isSuccessful()) {
-                            Toast.makeText(MainActivity.this, "Fetch Succeeded",
-                                    Toast.LENGTH_SHORT).show(); //TODO: remove toast, for debuging only
+
                             // After config data is successfully fetched, it must be activated before newly fetched
                             // values are returned.
                             mFirebaseRemoteConfig.activateFetched();
                         } else {
-                            Toast.makeText(MainActivity.this, "Fetch Failed",
-                                    Toast.LENGTH_SHORT).show(); //TODO: remove toast, for debuging only
+                            Toast.makeText(MainActivity.this, "Fetching remote config failed",
+                                    Toast.LENGTH_SHORT).show();
                         }
                         assignFetchedConfig();
                         setUI();

@@ -55,6 +55,6 @@ public class PasswordResetActivity extends Activity {
     }
 
     private void bindUI(){
-        metEmail = findViewById(R.id.etUserEmail);
+        metEmail = findViewById(R.id.etUserEmailPasswordReset);
     }
 }

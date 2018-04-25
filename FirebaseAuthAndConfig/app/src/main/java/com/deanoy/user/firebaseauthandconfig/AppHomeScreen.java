@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,13 +20,22 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URL;
 
 public class AppHomeScreen extends Activity {
+
+    private static String TAG = "AppHomeScreen";
+    private static String FACEBOOK_AUTH = "facebook.com";
+    private static String GMAIL_AUTH = "google.com";
+
+    private FirebaseAuth mAuth;
+    private FirebaseUser mLoggedInUser;
+    private TextView mtvUserName;
+    private TextView mtvUserEmail;
+    private ImageView mivUserProfilePicture;
+    private Button mbtnChangePassword;
+    private Button mbtnVerifyEmail;
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
@@ -54,18 +62,6 @@ public class AppHomeScreen extends Activity {
         }
     }
 
-    private static String TAG = "AppHomeScreen";
-    private static String FACEBOOK_AUTH = "facebook.com";
-    private static String GMAIL_AUTH = "google.com";
-
-    private FirebaseAuth mAuth;
-    private FirebaseUser mLoggedInUser;
-    private TextView mUserName;
-    private ImageView mUserProfilePicture;
-    private TextView mUserEmail;
-    private Button mbtnChangePassword;
-    private Button mbtnVerifyEmail;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -76,12 +72,12 @@ public class AppHomeScreen extends Activity {
 
         // binding and initialization
         mAuth = FirebaseAuth.getInstance();
-        mUserName =  findViewById(R.id.tvUserName);
-        mUserProfilePicture = findViewById(R.id.ivProfilePicture);
+        mtvUserName =  findViewById(R.id.tvUserNameAppHome);
+        mivUserProfilePicture = findViewById(R.id.ivProfilePictureAppHome);
         mLoggedInUser = mAuth.getCurrentUser();
-        mUserEmail = findViewById(R.id.tvEmailAddress);
-        mbtnChangePassword = findViewById(R.id.btnChangePassword);
-        mbtnVerifyEmail = findViewById(R.id.btnVerifyEmail);
+        mtvUserEmail = findViewById(R.id.tvEmailAddressAppHome);
+        mbtnChangePassword = findViewById(R.id.btnChangePasswordAppHome);
+        mbtnVerifyEmail = findViewById(R.id.btnVerifyEmailAppHome);
         setUI();
 
         Log.e(TAG, "onCreate <<");
@@ -104,9 +100,11 @@ public class AppHomeScreen extends Activity {
             // Set UI accordingly
             mbtnChangePassword.setVisibility(View.INVISIBLE);
             mbtnVerifyEmail.setVisibility(View.INVISIBLE);
+            mivUserProfilePicture.setVisibility(View.VISIBLE);
         } else {
             mbtnChangePassword.setVisibility(View.VISIBLE);
             mbtnVerifyEmail.setVisibility(View.VISIBLE);
+            mivUserProfilePicture.setVisibility(View.INVISIBLE);
         }
         if(mLoggedInUser.isEmailVerified()){
             mbtnVerifyEmail.setVisibility(View.INVISIBLE);
@@ -132,17 +130,17 @@ public class AppHomeScreen extends Activity {
         if(mLoggedInUser != null && !mLoggedInUser.isAnonymous()) // None anonymous user
         {
             mbtnChangePassword.setVisibility(View.VISIBLE);
-            mUserEmail.setVisibility(View.VISIBLE);
+            mtvUserEmail.setVisibility(View.VISIBLE);
             Log.e(TAG, "isEmailVerified << "+ mLoggedInUser.isEmailVerified());
 
             if(mLoggedInUser.getDisplayName() == null || mLoggedInUser.getDisplayName().isEmpty()) // no available name
             {
-                mUserName.setText("Display Name: unconfigured");
+                mtvUserName.setText("Display Name: unconfigured");
             }
             else
             {
                 Log.e(TAG, "onCreate >> User name: " + mLoggedInUser.getDisplayName());
-                mUserName.setText(mLoggedInUser.getDisplayName());
+                mtvUserName.setText(mLoggedInUser.getDisplayName());
             }
 
             if(mLoggedInUser.getPhotoUrl() != null && !mLoggedInUser.getPhotoUrl().toString().isEmpty())
@@ -155,26 +153,26 @@ public class AppHomeScreen extends Activity {
                     imageString = mLoggedInUser.getPhotoUrl().toString() + "/picture?width=200&height=200";
                 }
                 if((isUsingAuthMethod(FACEBOOK_AUTH) || isUsingAuthMethod(GMAIL_AUTH))) {
-                    new DownloadImageTask(mUserProfilePicture)
+                    new DownloadImageTask(mivUserProfilePicture)
                             .execute(imageString);
                 }
                 else{
-                    mUserProfilePicture.setImageURI(mLoggedInUser.getPhotoUrl());
+                    mivUserProfilePicture.setImageURI(mLoggedInUser.getPhotoUrl());
                 }
             }
 
             if(mLoggedInUser.getEmail() != null && !mLoggedInUser.getEmail().isEmpty())
             {
                 Log.e(TAG, "onCreate >> User email: " + mLoggedInUser.getEmail());
-                mUserEmail.setText("Email: " + mLoggedInUser.getEmail());
+                mtvUserEmail.setText("Email: " + mLoggedInUser.getEmail());
             }
         }
         else if(mLoggedInUser.isAnonymous()) // Set anonymous user UI
         {
-            mUserName.setText("Anonymous");
+            mtvUserName.setText("Anonymous");
             mbtnVerifyEmail.setVisibility(View.INVISIBLE);
             mbtnChangePassword.setVisibility(View.INVISIBLE);
-            mUserEmail.setVisibility(View.INVISIBLE);
+            mtvUserEmail.setVisibility(View.INVISIBLE);
         }
     }
 

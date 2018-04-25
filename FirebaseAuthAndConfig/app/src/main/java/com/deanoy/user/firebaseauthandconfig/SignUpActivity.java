@@ -4,15 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,7 +17,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.util.regex.Matcher;
@@ -30,15 +26,12 @@ public class SignUpActivity extends Activity {
     private static String TAG = "SignUpActivity";
     private static final String EMAIL_DATA = "email_data";
     private static final String PASSWORD_DATA = "password_data";
-    public final static int IMG_RESULT = 1001;
 
     private FirebaseAuth mAuth;
     private EditText mDisplayName;
     private EditText mEmail;
     private EditText mPassword;
-    private ImageView mAvatar;
     private CheckBox mNotRobotCheckBox;
-    private String mImageURI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +41,9 @@ public class SignUpActivity extends Activity {
         // Bind UI
         mAuth = FirebaseAuth.getInstance();
         mDisplayName = findViewById(R.id.etDisplayName);
-        mEmail = findViewById(R.id.etEmail);
-        mPassword = findViewById(R.id.etPassword);
-        mAvatar = findViewById(R.id.ivAvatar);
+        mEmail = findViewById(R.id.etEmailMainActivity);
+        mPassword = findViewById(R.id.etPasswordMainActivity);
         mNotRobotCheckBox = findViewById(R.id.cbNotRobot);
-        mImageURI = new String();
 
         // Init UI
         Intent intent = getIntent();
@@ -78,7 +69,8 @@ public class SignUpActivity extends Activity {
                                 Log.e(TAG, "createUserWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 showSignUpResult(user);
-                            }
+                                Intent homeScreenIntent = new Intent(getApplicationContext(), AppHomeScreen.class);
+                                startActivity(homeScreenIntent);                            }
                             else
                             {
                                 // If sign in fails, display a message to the user.
@@ -92,27 +84,6 @@ public class SignUpActivity extends Activity {
         Log.e(TAG, "onSignUpClick <<");
     }
 
-    public void onChooseAvatarClick(View v)
-    {
-        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(pickIntent, IMG_RESULT);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e(TAG, "onActivityResult() >>");
-
-        super.onActivityResult(requestCode,resultCode,data);
-
-        if (requestCode == IMG_RESULT && resultCode == RESULT_OK && data != null)
-        {
-            Log.e(TAG, "onActivityResult() >> " + data.getData().toString());
-            mImageURI = data.getData().toString();
-            mAvatar.setImageURI(Uri.parse(mImageURI));
-        }
-
-        Log.e(TAG, "onActivityResult() <<");
-    }
 
     private void showSignUpResult(FirebaseUser user)
     {
@@ -126,6 +97,7 @@ public class SignUpActivity extends Activity {
         {
             updateFirebaseUserInfo(user);
             displayMessage("Signed Up successfully");
+
         }
 
         Log.e(TAG, "showSignUpResult <<");
@@ -137,19 +109,9 @@ public class SignUpActivity extends Activity {
 
         UserProfileChangeRequest.Builder profileBuilder = new UserProfileChangeRequest.Builder();
 
-        profileBuilder.setDisplayName(mDisplayName.getText().toString());
-
-        if(!mImageURI.isEmpty()) {
-            profileBuilder.setPhotoUri(Uri.parse(mImageURI));
+        if(mDisplayName.getText() != null) {
+            profileBuilder.setDisplayName(mDisplayName.getText().toString());
         }
-
-        user.updateProfile(profileBuilder.build()).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Intent i = new Intent(getApplicationContext(), AppHomeScreen.class);
-                startActivity(i);
-            }
-        });
 
         Log.e(TAG, "updateFirebaseUserInfo <<");
     }
@@ -196,6 +158,7 @@ public class SignUpActivity extends Activity {
         }
 
         Log.e(TAG, "isValidSignUpFields <<");
+
         return result;
     }
 

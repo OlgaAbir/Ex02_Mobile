@@ -7,7 +7,7 @@
     tools:context="com.deanoy.user.firebaseauthandconfig.MainActivity">
 
     <EditText
-        android:id="@+id/etEmail"
+        android:id="@+id/etEmailMainActivity"
         android:layout_width="312dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -23,7 +23,7 @@
         app:layout_constraintVertical_bias="0.022" />
 
     <EditText
-        android:id="@+id/etPassword"
+        android:id="@+id/etPasswordMainActivity"
         android:layout_width="310dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -41,7 +41,7 @@
         app:layout_constraintVertical_bias="0.271" />
 
     <TextView
-        android:id="@+id/tvUserInfo"
+        android:id="@+id/tvUserInfoMainActivity"
         android:layout_width="125dp"
         android:layout_height="32dp"
         android:layout_marginBottom="8dp"
@@ -56,7 +56,7 @@
         app:layout_constraintVertical_bias="0.017" />
 
     <Button
-        android:id="@+id/btnSignUp"
+        android:id="@+id/btnSignUpMainActivity"
         android:layout_width="114dp"
         android:layout_height="35dp"
         android:layout_marginBottom="8dp"
@@ -75,7 +75,7 @@
         app:layout_constraintVertical_bias="0.567" />
 
     <Button
-        android:id="@+id/btnSignIn"
+        android:id="@+id/btnSignInMainActivity"
         android:layout_width="310dp"
         android:layout_height="48dp"
         android:layout_marginBottom="8dp"
@@ -91,7 +91,7 @@
         app:layout_constraintVertical_bias="0.418" />
 
     <com.google.android.gms.common.SignInButton
-        android:id="@+id/btnGoogleSignIn"
+        android:id="@+id/btnGoogleSignInMainActivity"
         android:layout_width="313dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -106,7 +106,7 @@
         app:layout_constraintVertical_bias="0.709" />
 
     <com.facebook.login.widget.LoginButton
-        android:id="@+id/login_button"
+        android:id="@+id/btnFacebookLoginMainActivity"
         android:layout_width="313dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -114,13 +114,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnSkip"
+        app:layout_constraintBottom_toTopOf="@+id/btnSkipMainActivity"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnGoogleSignIn" />
+        app:layout_constraintTop_toBottomOf="@+id/btnGoogleSignInMainActivity" />
 
     <Button
-        android:id="@+id/btnForgotPassword"
+        android:id="@+id/btnForgotPasswordMainActivity"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_marginBottom="8dp"
@@ -136,7 +136,7 @@
         app:layout_constraintVertical_bias="0.567" />
 
     <Button
-        android:id="@+id/btnSkip"
+        android:id="@+id/btnSkipMainActivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"

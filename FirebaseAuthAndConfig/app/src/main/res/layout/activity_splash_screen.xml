@@ -8,6 +8,7 @@
     tools:context="mta.assignment1.SplashScreen">
 
     <TextView
+        android:id="@+id/tvTitleSplashScreen"
         android:layout_width="match_parent"
         android:layout_height="61dp"
         android:gravity="center"
@@ -15,13 +16,14 @@
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
 
     <ImageView
-        android:id="@+id/imageViewDisplay"
+        android:id="@+id/imageViewDisplaySplashScreen"
         android:layout_width="wrap_content"
         android:layout_height="275dp"
         android:layout_margin="5dp"
         android:src="@drawable/logo" />
 
     <TextView
+        android:id="@+id/tvPresentersSplashScreen"
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:layout_weight="1"

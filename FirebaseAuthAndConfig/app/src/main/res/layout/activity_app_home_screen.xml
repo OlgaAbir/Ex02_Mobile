@@ -7,7 +7,7 @@
     tools:context="com.deanoy.user.firebaseauthandconfig.AppHomeScreen">
 
     <Button
-        android:id="@+id/btnSignOut"
+        android:id="@+id/btnSignOutAppHome"
         android:layout_width="266dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -23,7 +23,7 @@
         app:layout_constraintVertical_bias="0.972" />
 
     <ImageView
-        android:id="@+id/ivProfilePicture"
+        android:id="@+id/ivProfilePictureAppHome"
         android:layout_width="228dp"
         android:layout_height="185dp"
         android:layout_marginBottom="8dp"
@@ -41,7 +41,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/tvUserName"
+        android:id="@+id/tvUserNameAppHome"
         android:layout_width="322dp"
         android:layout_height="40dp"
         android:layout_marginBottom="8dp"
@@ -58,7 +58,7 @@
         app:layout_constraintVertical_bias="0.448" />
 
     <TextView
-        android:id="@+id/tvEmailAddress"
+        android:id="@+id/tvEmailAddressAppHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -73,7 +73,7 @@
         app:layout_constraintVertical_bias="0.548" />
 
     <Button
-        android:id="@+id/btnVerifyEmail"
+        android:id="@+id/btnVerifyEmailAppHome"
         android:layout_width="266dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -89,7 +89,7 @@
         app:layout_constraintVertical_bias="0.677" />
 
     <Button
-        android:id="@+id/btnChangePassword"
+        android:id="@+id/btnChangePasswordAppHome"
         android:layout_width="263dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
