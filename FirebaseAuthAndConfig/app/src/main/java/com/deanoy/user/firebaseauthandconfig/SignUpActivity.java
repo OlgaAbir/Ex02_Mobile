@@ -69,8 +69,7 @@ public class SignUpActivity extends Activity {
                                 Log.e(TAG, "createUserWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 showSignUpResult(user);
-                                Intent homeScreenIntent = new Intent(getApplicationContext(), AppHomeScreen.class);
-                                startActivity(homeScreenIntent);                            }
+                            }
                             else
                             {
                                 // If sign in fails, display a message to the user.
@@ -112,6 +111,14 @@ public class SignUpActivity extends Activity {
         if(mDisplayName.getText() != null) {
             profileBuilder.setDisplayName(mDisplayName.getText().toString());
         }
+
+        user.updateProfile(profileBuilder.build()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Intent i = new Intent(getApplicationContext(), AppHomeScreen.class);
+                startActivity(i);
+            }
+        });
 
         Log.e(TAG, "updateFirebaseUserInfo <<");
     }

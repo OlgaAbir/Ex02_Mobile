@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FirebaseAuthAndConfig.iml" filepath="$PROJECT_DIR$/FirebaseAuthAndConfig.iml" />
-      <module fileurl="file://C:\GitRepository\Ex02_Mobile1\FirebaseAuthAndConfig\FirebaseAuthAndConfig.iml" filepath="C:\GitRepository\Ex02_Mobile1\FirebaseAuthAndConfig\FirebaseAuthAndConfig.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\GitRepository\Ex02_Mobile1\FirebaseAuthAndConfig\app\app.iml" filepath="C:\GitRepository\Ex02_Mobile1\FirebaseAuthAndConfig\app\app.iml" />
     </modules>
   </component>
 </project>
