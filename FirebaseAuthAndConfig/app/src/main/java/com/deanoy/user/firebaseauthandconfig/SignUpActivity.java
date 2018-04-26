@@ -68,6 +68,7 @@ public class SignUpActivity extends Activity {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.e(TAG, "createUserWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
+                                user.updateEmail(mEmail.getText().toString());
                                 showSignUpResult(user);
                             }
                             else
