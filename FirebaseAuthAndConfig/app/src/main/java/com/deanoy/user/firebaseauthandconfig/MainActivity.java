@@ -348,7 +348,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+    private void firebaseAuthWithGoogle(final GoogleSignInAccount account) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
@@ -360,6 +360,7 @@ public class MainActivity extends Activity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            user.updateEmail(account.getEmail().toString());
                             displayUserDetails(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -374,7 +375,7 @@ public class MainActivity extends Activity {
     private void firebaseAuthWithFacebook(AccessToken token) {
         Log.e(TAG, "handleFacebookAccessToken:" + token);
 
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        final AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -385,6 +386,7 @@ public class MainActivity extends Activity {
                             Toast.makeText(MainActivity.this, "Facebook authentication success",
                                     Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
+                            Log.e(TAG,"email" +  user.getEmail());
                             displayUserDetails(user);
                         } else {
                             // If sign in fails, display a message to the user.
