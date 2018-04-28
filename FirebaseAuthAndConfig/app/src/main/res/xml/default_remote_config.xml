@@ -3,7 +3,7 @@
 <defaultsMap>
     <entry>
         <key>enable_anonymous_signin</key>
-        <value>false</value>
+        <value>true</value>
     </entry>
 </defaultsMap>
     <!-- END xml_defaults -->
