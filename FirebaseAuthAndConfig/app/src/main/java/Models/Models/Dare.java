@@ -1,7 +1,11 @@
+package Models;
+
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -12,7 +16,6 @@ import java.util.Date;
 public class Dare implements Parcelable {
     public Dare() {}
 
-    private String mId; // Dare ID
     private String mCreaterID; // The id of the creating user
     private String mAttemptingUserID;
     private String mDescriptionImgURL; // The firebase storage url of the image that describes the dare
@@ -21,24 +24,33 @@ public class Dare implements Parcelable {
     private Date mStartDate; // The date the dare was accepted
     private Date mEndDate; // The date the dare was succeeded
     private DareState mDareState = DareState.Available;
+    private Review[] mReviews = new Review[] {};
 
     protected Dare(Parcel in) {
-        mId = in.readString();
         mCreaterID = in.readString();
         mAttemptingUserID = in.readString();
         mDescriptionImgURL = in.readString();
         mCompletionImgURL = in.readString();
         mBuyInCost = in.readFloat();
+        mReviews = (Review[])in.readParcelableArray(getClass().getClassLoader());
+        long tempDate = in.readLong();
+        mStartDate = tempDate == -1 ? null : new Date(tempDate);
+        tempDate = in.readLong();
+        mEndDate = tempDate == -1 ? null : new Date(tempDate);
+        mDareState = DareState.Available;  //TODO: temp, mDareState = (darestate)in.readSerializable();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mId);
         dest.writeString(mCreaterID);
         dest.writeString(mAttemptingUserID);
         dest.writeString(mDescriptionImgURL);
         dest.writeString(mCompletionImgURL);
         dest.writeFloat(mBuyInCost);
+        dest.writeParcelableArray(mReviews, PARCELABLE_WRITE_RETURN_VALUE);
+        dest.writeLong(mStartDate != null ? mStartDate.getTime() : -1);
+        dest.writeLong(mEndDate != null ? mEndDate.getTime() : -1);
+        dest.writeSerializable(mDareState);
     }
 
     @Override
@@ -58,13 +70,6 @@ public class Dare implements Parcelable {
         }
     };
 
-    public String getmId() {
-        return mId;
-    }
-
-    public void setmId(String mId) {
-        this.mId = mId;
-    }
 
     public String getmCreaterID() {
         return mCreaterID;
@@ -128,5 +133,20 @@ public class Dare implements Parcelable {
 
     public void setmDareState(DareState mDareState) {
         this.mDareState = mDareState;
+    }
+
+    @Override
+    public String toString() {
+        return "Dare{" +
+                ", mCreaterID='" + mCreaterID + '\'' +
+                ", mAttemptingUserID='" + mAttemptingUserID + '\'' +
+                ", mDescriptionImgURL='" + mDescriptionImgURL + '\'' +
+                ", mCompletionImgURL='" + mCompletionImgURL + '\'' +
+                ", mBuyInCost=" + mBuyInCost +
+                ", mStartDate=" + mStartDate +
+                ", mEndDate=" + mEndDate +
+                ", mDareState=" + mDareState +
+                ", mReviews=" + Arrays.toString(mReviews) +
+                '}';
     }
 }

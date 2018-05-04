@@ -1,3 +1,5 @@
+package Models;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -52,20 +54,31 @@ public class Review implements Parcelable {
         return 0;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        //TODO
+    protected Review(Parcel in) {
+        mId = in.readString();
+        mText = in.readString();
+        mWriterID = in.readString();
+        long tempDate = in.readLong();
+        mCreationDate = tempDate == -1 ? null : new Date(tempDate);
     }
 
-    public static final Creator<Dare> CREATOR = new Creator<Dare>() {
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mId);
+        dest.writeString(mText);
+        dest.writeString(mWriterID);
+        dest.writeLong(mCreationDate != null ? mCreationDate.getTime() : -1);
+    }
+
+    public static final Creator<Review> CREATOR = new Creator<Review>() {
         @Override
-        public Dare createFromParcel(Parcel in) {
-            return new Dare(in);
+        public Review createFromParcel(Parcel in) {
+            return new Review(in);
         }
 
         @Override
-        public Dare[] newArray(int size) {
-            return new Dare[size];
+        public Review[] newArray(int size) {
+            return new Review[size];
         }
     };
 }

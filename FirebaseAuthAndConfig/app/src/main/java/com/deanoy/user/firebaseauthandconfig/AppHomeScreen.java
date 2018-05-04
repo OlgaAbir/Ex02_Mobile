@@ -20,8 +20,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+
+import Models.Dare;
 
 public class AppHomeScreen extends Activity {
 
@@ -79,6 +87,7 @@ public class AppHomeScreen extends Activity {
         mbtnChangePassword = findViewById(R.id.btnChangePasswordAppHome);
         mbtnVerifyEmail = findViewById(R.id.btnVerifyEmailAppHome);
         setUI();
+        setDatabase();
 
         Log.e(TAG, "onCreate <<");
     }
@@ -215,5 +224,36 @@ public class AppHomeScreen extends Activity {
 
     private void displayMessage(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    private void setDatabase() {
+        Log.e(TAG, "setDatabase() >>" );
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Dares");
+
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                Log.e(TAG, "onDataChange() >>" );
+                Dare dare;
+                ArrayList<Dare> dares = new ArrayList<Dare>();
+                for (DataSnapshot dareSnapshot: dataSnapshot.getChildren()) {
+                    dare = dareSnapshot.getValue(Dare.class);
+                    Log.e(TAG, "#$#Dare: " + dare.toString());
+                    dares.add(dare);
+                }
+                Log.e(TAG, "onDataChange() <<" );
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+        Log.e(TAG, "setDatabase() <<" );
     }
 }
