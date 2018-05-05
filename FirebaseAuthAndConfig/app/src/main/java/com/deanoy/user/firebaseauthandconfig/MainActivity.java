@@ -319,7 +319,7 @@ public class MainActivity extends Activity {
     }
 
     private void startDisplayHomeScreen() {
-        Intent i = new Intent(getApplicationContext(), AppHomeScreen.class);
+        Intent i = new Intent(getApplicationContext(), AllProductsActivity.class);
 
         startActivity(i);
     }

@@ -31,9 +31,9 @@ import java.util.ArrayList;
 
 import Models.Dare;
 
-public class AppHomeScreen extends Activity {
+public class UserProfileActivity extends Activity {
 
-    private static String TAG = "AppHomeScreen";
+    private static String TAG = "UserProfileActivity";
     private static String FACEBOOK_AUTH = "facebook.com";
     private static String GMAIL_AUTH = "google.com";
 
@@ -76,7 +76,7 @@ public class AppHomeScreen extends Activity {
         Log.e(TAG, "onCreate >>");
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_app_home_screen);
+        setContentView(R.layout.activity_user_profile);
 
         // binding and initialization
         mAuth = FirebaseAuth.getInstance();

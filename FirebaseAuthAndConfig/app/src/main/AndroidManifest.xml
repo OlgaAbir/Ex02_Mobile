@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AppHomeScreen" />
+        <activity android:name=".UserProfileActivity" />
         // App home screen activity
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -46,7 +46,8 @@
         </activity>
         <activity android:name=".PasswordResetActivity" />
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".ChangePasswordActivity"></activity>
+        <activity android:name=".ChangePasswordActivity" />
+        <activity android:name=".AllProductsActivity"></activity>
     </application>
 
 </manifest>
