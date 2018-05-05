@@ -16,22 +16,37 @@ import java.util.Date;
 public class Dare implements Parcelable {
     public Dare() {}
 
-    private String mCreaterID; // The id of the creating user
-    private String mAttemptingUserID;
+    //Creater details
+    private String mCreaterID;
+    private String mCreaterEmail;
+    private String mCreaterName;
+
+    //Dare details
+    private String mDareName;
+    private String mDescription;
+    private ArrayList<String> mAttemptingUserID;
+    private float mBuyInCost; // The amount of money used to buy in to attempt the dare
+    private int mHoursToFinish;
+    private Review[] mReviews = new Review[] {};
+
+    //Dare progress
     private String mDescriptionImgURL; // The firebase storage url of the image that describes the dare
     private String mCompletionImgURL; // The firebase storage url of the image that is used as evidence of completion
-    private float mBuyInCost; // The amount of money used to buy in to attempt the dare
     private Date mStartDate; // The date the dare was accepted
     private Date mEndDate; // The date the dare was succeeded
     private DareState mDareState = DareState.Available;
-    private Review[] mReviews = new Review[] {};
 
     protected Dare(Parcel in) {
         mCreaterID = in.readString();
-        mAttemptingUserID = in.readString();
+        mCreaterEmail = in.readString();
+        mCreaterName = in.readString();
+        mDareName = in.readString();
+        mDescription = in.readString();
+        mAttemptingUserID = in.readArrayList(getClass().getClassLoader());
         mDescriptionImgURL = in.readString();
         mCompletionImgURL = in.readString();
         mBuyInCost = in.readFloat();
+        mHoursToFinish = in.readInt();
         mReviews = (Review[])in.readParcelableArray(getClass().getClassLoader());
         long tempDate = in.readLong();
         mStartDate = tempDate == -1 ? null : new Date(tempDate);
@@ -40,13 +55,35 @@ public class Dare implements Parcelable {
         mDareState = DareState.Available;  //TODO: temp, mDareState = (darestate)in.readSerializable();
     }
 
+    public Dare(String createrID, String createrEmail, String createrName, String dareName, String description, float buyInCost, int hoursToFinish, String descriptionImgURL) {
+        this.mCreaterID = createrID;
+        this.mCreaterEmail = createrEmail;
+        this.mCreaterName = createrName;
+        this.mDareName = dareName;
+        this.mDescription = description;
+        this.mAttemptingUserID = null;
+        this.mBuyInCost = buyInCost;
+        this.mHoursToFinish = hoursToFinish;
+        this.mReviews = null;
+        this.mDescriptionImgURL = descriptionImgURL;
+        this.mCompletionImgURL = null;
+        this.mStartDate = null;
+        this.mEndDate = null;
+        this.mDareState = DareState.Available;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mCreaterID);
-        dest.writeString(mAttemptingUserID);
+        dest.writeString(mCreaterEmail);
+        dest.writeString(mCreaterName);
+        dest.writeString(mDareName);
+        dest.writeString(mDescription);
+        dest.writeStringList(mAttemptingUserID);
         dest.writeString(mDescriptionImgURL);
         dest.writeString(mCompletionImgURL);
         dest.writeFloat(mBuyInCost);
+        dest.writeInt(mHoursToFinish);
         dest.writeParcelableArray(mReviews, PARCELABLE_WRITE_RETURN_VALUE);
         dest.writeLong(mStartDate != null ? mStartDate.getTime() : -1);
         dest.writeLong(mEndDate != null ? mEndDate.getTime() : -1);
@@ -70,83 +107,139 @@ public class Dare implements Parcelable {
         }
     };
 
-
-    public String getmCreaterID() {
-        return mCreaterID;
-    }
-
-    public void setmCreaterID(String mCreaterID) {
-        this.mCreaterID = mCreaterID;
-    }
-
-    public String getmAttemptingUserID() {
-        return mAttemptingUserID;
-    }
-
-    public void setmAttemptingUserID(String mAttemptingUserID) {
-        this.mAttemptingUserID = mAttemptingUserID;
-    }
-
-    public String getmDescriptionImgURL() {
-        return mDescriptionImgURL;
-    }
-
-    public void setmDescriptionImgURL(String mDescriptionImgURL) {
-        this.mDescriptionImgURL = mDescriptionImgURL;
-    }
-
-    public String getmCompletionImgURL() {
-        return mCompletionImgURL;
-    }
-
-    public void setmCompletionImgURL(String mCompletionImgURL) {
-        this.mCompletionImgURL = mCompletionImgURL;
-    }
-
-    public float getmBuyInCost() {
-        return mBuyInCost;
-    }
-
-    public void setmBuyInCost(float mBuyInCost) {
-        this.mBuyInCost = mBuyInCost;
-    }
-
-    public Date getmStartDate() {
-        return mStartDate;
-    }
-
-    public void setmStartDate(Date mStartDate) {
-        this.mStartDate = mStartDate;
-    }
-
-    public Date getmEndDate() {
-        return mEndDate;
-    }
-
-    public void setmEndDate(Date mEndDate) {
-        this.mEndDate = mEndDate;
-    }
-
-    public DareState getmDareState() {
-        return mDareState;
-    }
-
-    public void setmDareState(DareState mDareState) {
-        this.mDareState = mDareState;
-    }
-
+    //toString function - Mostly for debugging
     @Override
     public String toString() {
         return "Dare{" +
-                ", mCreaterID='" + mCreaterID + '\'' +
-                ", mAttemptingUserID='" + mAttemptingUserID + '\'' +
+                "mCreaterID='" + mCreaterID + '\'' +
+                ", mCreaterEmail='" + mCreaterEmail + '\'' +
+                ", mCreaterName='" + mCreaterName + '\'' +
+                ", mDareName='" + mDareName + '\'' +
+                ", mDescription='" + mDescription + '\'' +
+                ", mAttemptingUserID=" + mAttemptingUserID +
+                ", mBuyInCost=" + mBuyInCost +
+                ", mReviews=" + Arrays.toString(mReviews) +
                 ", mDescriptionImgURL='" + mDescriptionImgURL + '\'' +
                 ", mCompletionImgURL='" + mCompletionImgURL + '\'' +
-                ", mBuyInCost=" + mBuyInCost +
                 ", mStartDate=" + mStartDate +
                 ", mEndDate=" + mEndDate +
                 ", mDareState=" + mDareState +
-                ", mReviews=" + Arrays.toString(mReviews) +
                 '}';
+    }
+
+    public String getCreaterID() {
+        return mCreaterID;
+    }
+
+    public void setCreaterID(String mCreaterID) {
+        this.mCreaterID = mCreaterID;
+    }
+
+    public String getDescriptionImgURL() {
+        return mDescriptionImgURL;
+    }
+
+    public void setDescriptionImgURL(String mDescriptionImgURL) {
+        this.mDescriptionImgURL = mDescriptionImgURL;
+    }
+
+    public String getCompletionImgURL() {
+        return mCompletionImgURL;
+    }
+
+    public void setCompletionImgURL(String mCompletionImgURL) {
+        this.mCompletionImgURL = mCompletionImgURL;
+    }
+
+    public float getBuyInCost() {
+        return mBuyInCost;
+    }
+
+    public void setBuyInCost(float mBuyInCost) {
+        this.mBuyInCost = mBuyInCost;
+    }
+
+    public float getProfit() {
+        return 2 * mBuyInCost;
+    }
+
+    public Date getStartDate() {
+        return mStartDate;
+    }
+
+    public void setStartDate(Date mStartDate) {
+        this.mStartDate = mStartDate;
+    }
+
+    public Date getEndDate() {
+        return mEndDate;
+    }
+
+    public void setEndDate(Date mEndDate) {
+        this.mEndDate = mEndDate;
+    }
+
+    public DareState getDareState() {
+        return mDareState;
+    }
+
+    public void setDareState(DareState mDareState) {
+        this.mDareState = mDareState;
+    }
+
+    public String getCreaterEmail() {
+        return mCreaterEmail;
+    }
+
+    public void setCreaterEmail(String mCreaterEmail) {
+        this.mCreaterEmail = mCreaterEmail;
+    }
+
+    public String getCreaterName() {
+        return mCreaterName;
+    }
+
+    public void setCreaterName(String mCreaterName) {
+        this.mCreaterName = mCreaterName;
+    }
+
+    public String getDareName() {
+        return mDareName;
+    }
+
+    public void setDareName(String mDareName) {
+        this.mDareName = mDareName;
+    }
+
+    public String getDescription() {
+        return mDescription;
+    }
+
+    public void setDescription(String mDescription) {
+        this.mDescription = mDescription;
+    }
+
+    public ArrayList<String> getAttemptingUserID() {
+        return mAttemptingUserID;
+    }
+
+    public void setAttemptingUserID(ArrayList<String> mAttemptingUserID) {
+        this.mAttemptingUserID = mAttemptingUserID;
+    }
+
+    public Review[] getReviews() {
+        return mReviews;
+    }
+
+    public void setReviews(Review[] mReviews) {
+        this.mReviews = mReviews;
+    }
+
+    public int getHoursToFinish() {
+        return mHoursToFinish;
+    }
+
+    public void setmHoursToFinish(int mHoursToFinish) {
+        this.mHoursToFinish = mHoursToFinish;
     }
 }

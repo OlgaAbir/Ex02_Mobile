@@ -5,17 +5,8 @@ package Models;
  */
 
 public enum DareState {
-    Available(0),
-    InProgress(1),
-    Succeeded(2),
-    Failed(3);
-
-    private final int mValue;
-    private DareState(int value) {
-        this.mValue = value;
-    }
-
-    public int getValue() {
-        return this.mValue;
-    }
+    Available,
+    InProgress,
+    Succeeded,
+    Failed
 }
