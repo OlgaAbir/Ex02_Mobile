@@ -10,6 +10,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.deanoy.user.firebaseauthandconfig.DareDetailsActivity;
+import com.deanoy.user.firebaseauthandconfig.R;
 
 public class DareViewHolder extends RecyclerView.ViewHolder{
 
@@ -28,6 +29,7 @@ public class DareViewHolder extends RecyclerView.ViewHolder{
     public DareViewHolder(Context context, View itemView) {
         super(itemView);
 
+        mDareCardView = itemView.findViewById(R.id.cvDare);
         mContext = context;
 
         mDareCardView.setOnClickListener(new View.OnClickListener() {
