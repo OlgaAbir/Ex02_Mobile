@@ -5,21 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="mta.assignment1.SplashScreen">
-
-    <TextView
-        android:id="@+id/tvTitleSplashScreen"
-        android:layout_width="match_parent"
-        android:layout_height="61dp"
-        android:gravity="center"
-        android:text="ContactsApp"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
+    tools:context="com.deanoy.user.firebaseauthandconfig.SplashScreen">
 
     <ImageView
         android:id="@+id/imageViewDisplaySplashScreen"
         android:layout_width="wrap_content"
         android:layout_height="275dp"
         android:layout_margin="5dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/logo" />
 
     <TextView
