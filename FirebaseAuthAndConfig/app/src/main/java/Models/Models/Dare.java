@@ -16,6 +16,8 @@ import java.util.Date;
 public class Dare implements Parcelable {
     public Dare() {}
 
+    // TODO: add Dare name implementation
+    private String mDareName;
     private String mCreaterID; // The id of the creating user
     private String mAttemptingUserID;
     private String mDescriptionImgURL; // The firebase storage url of the image that describes the dare
@@ -71,6 +73,7 @@ public class Dare implements Parcelable {
     };
 
 
+    public String getmDareName(){return mDareName;}
     public String getmCreaterID() {
         return mCreaterID;
     }
