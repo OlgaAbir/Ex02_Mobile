@@ -87,9 +87,36 @@ public class UserProfileActivity extends Activity {
         mbtnChangePassword = findViewById(R.id.btnChangePasswordAppHome);
         mbtnVerifyEmail = findViewById(R.id.btnVerifyEmailAppHome);
         setUI();
-        setDatabase();
+        //tempLoadToDatabase(); //TODO: This is a temp function for creating the dummy dares. Remove before finishing assignment
+        getDaresFromDB();
 
         Log.e(TAG, "onCreate <<");
+    }
+
+    //TODO: This is a temp function for creating the dummy dares. Remove before finishing assignment
+    private void tempLoadToDatabase() {
+        Dare dare;
+        //ArrayList<Dare> daresList = new ArrayList<Dare>();
+        DatabaseReference dareRef = FirebaseDatabase.getInstance().getReference("Dares");
+        String dbKey;
+
+        for(int i = 0; i < 100; i++) { // Create fake dares
+            if(i % 3 == 0) { // Olga
+                dare = new Dare("0Aq19XxCdla2b3ymOlDxI1baK283", "olgaabirhaim@gmail.com", "Olga",
+                        "Olga's game", "Bomb a national monument", (float)50, 24, "description.img");
+            }else if(i % 3 == 1) { // Dean
+                dare = new Dare("YPmMm9PjTTXdxwSWGJCSL8JntXo1", "rustykopo@gmail.com", "Dean",
+                        "Dean's trial", "Execute a government official", (float)2, 48, "description.img");
+            } else {
+                dare = new Dare("X4SkI6HiHVSUM8cXBcpU9zW3OXt1", "olga_94@live.ru", "Olga2",
+                        "No guts no glory", "Steal Idan's Mercedes", (float)500, 8, "description.img");
+            }
+
+            dbKey = dareRef.push().getKey();
+            dareRef.child(dbKey).setValue(dare);
+        }
+
+
     }
 
     @Override
@@ -226,8 +253,8 @@ public class UserProfileActivity extends Activity {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    private void setDatabase() {
-        Log.e(TAG, "setDatabase() >>" );
+    private void getDaresFromDB() {
+        Log.e(TAG, "getDaresFromDB() >>" );
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Dares");
 
@@ -242,7 +269,7 @@ public class UserProfileActivity extends Activity {
                 ArrayList<Dare> dares = new ArrayList<Dare>();
                 for (DataSnapshot dareSnapshot: dataSnapshot.getChildren()) {
                     dare = dareSnapshot.getValue(Dare.class);
-                    Log.e(TAG, "#$#Dare: " + dare.toString());
+                    Log.e(TAG, "#$#Dare: " + dare.toString()); // Print for debugging
                     dares.add(dare);
                 }
                 Log.e(TAG, "onDataChange() <<" );
@@ -254,6 +281,6 @@ public class UserProfileActivity extends Activity {
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
-        Log.e(TAG, "setDatabase() <<" );
+        Log.e(TAG, "getDaresFromDB() <<" );
     }
 }
