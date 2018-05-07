@@ -18,7 +18,7 @@ public class DareViewHolder extends RecyclerView.ViewHolder{
     private CardView mDareCardView;
     private TextView mCreatorName;
     private TextView mDareName;
-    private TextView mDescription;
+    private TextView mProfit;
     private TextView mPrice;
     private ImageView mDareImg; // The image that describes the dare
     private Dare mSelectedDare;
@@ -30,7 +30,7 @@ public class DareViewHolder extends RecyclerView.ViewHolder{
         mDareCardView = itemView.findViewById(R.id.cvDare);
         mCreatorName = itemView.findViewById(R.id.tvPublisher);
         mDareName = itemView.findViewById(R.id.tvDareName);
-        mDescription = itemView.findViewById(R.id.tvDareDescription);
+        mProfit = itemView.findViewById(R.id.tvProfit);
         mPrice = itemView.findViewById(R.id.tvPrice);
         mDareImg = itemView.findViewById(R.id.ivDareImage);
         mContext = context;
@@ -66,9 +66,9 @@ public class DareViewHolder extends RecyclerView.ViewHolder{
         return mCreatorName;
     }
 
-    public TextView getDescription()
+    public TextView getProfit()
     {
-        return mDescription;
+        return mProfit;
     }
 
     public TextView getPrice()
