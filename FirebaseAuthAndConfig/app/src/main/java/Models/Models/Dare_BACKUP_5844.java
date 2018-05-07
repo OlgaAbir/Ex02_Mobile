@@ -16,6 +16,12 @@ import java.util.Date;
 public class Dare implements Parcelable {
     public Dare() {}
 
+<<<<<<< HEAD
+    // TODO: add Dare name implementation
+    private String mDareName;
+    private String mCreaterID; // The id of the creating user
+    private String mAttemptingUserID;
+=======
     //Creater details
     private String mCreaterID;
     private String mCreaterEmail;
@@ -30,6 +36,7 @@ public class Dare implements Parcelable {
     private Review[] mReviews = new Review[] {};
 
     //Dare progress
+>>>>>>> origin/Ex03
     private String mDescriptionImgURL; // The firebase storage url of the image that describes the dare
     private String mCompletionImgURL; // The firebase storage url of the image that is used as evidence of completion
     private Date mStartDate; // The date the dare was accepted
@@ -127,7 +134,12 @@ public class Dare implements Parcelable {
                 '}';
     }
 
+<<<<<<< HEAD
+    public String getmDareName(){return mDareName;}
+    public String getmCreaterID() {
+=======
     public String getCreaterID() {
+>>>>>>> origin/Ex03
         return mCreaterID;
     }
 
