@@ -11,7 +11,6 @@ import java.util.Date;
 
 public class Review implements Parcelable {
 
-    private String mId;
     private String mText;
     private String mWriterID;
     private String mWriterName;// TODO: Dean add this to reviews database please and generate reviews in the database
@@ -27,14 +26,6 @@ public class Review implements Parcelable {
     public void setWriterName(String writerName)
     {
         mWriterName = writerName;
-    }
-
-    public String getId() {
-        return mId;
-    }
-
-    public void setId(String mId) {
-        this.mId = mId;
     }
 
     public String getText() {
@@ -67,7 +58,6 @@ public class Review implements Parcelable {
     }
 
     protected Review(Parcel in) {
-        mId = in.readString();
         mText = in.readString();
         mWriterID = in.readString();
         long tempDate = in.readLong();
@@ -76,7 +66,6 @@ public class Review implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mId);
         dest.writeString(mText);
         dest.writeString(mWriterID);
         dest.writeLong(mCreationDate != null ? mCreationDate.getTime() : -1);
@@ -93,4 +82,14 @@ public class Review implements Parcelable {
             return new Review[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "Review{" +
+                "mText='" + mText + '\'' +
+                ", mWriterID='" + mWriterID + '\'' +
+                ", mWriterName='" + mWriterName + '\'' +
+                ", mCreationDate=" + mCreationDate +
+                '}';
+    }
 }

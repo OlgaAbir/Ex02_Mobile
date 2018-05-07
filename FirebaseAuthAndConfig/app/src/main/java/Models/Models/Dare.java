@@ -17,19 +17,18 @@ import java.util.List;
 public class Dare implements Parcelable {
     public Dare() {}
 
-
     //Creator details
     private String mCreaterID;
     private String mCreaterEmail;
     private String mCreaterName;
 
     //Dare details
+    private String mDareId;
     private String mDareName;
     private String mDescription;
     private ArrayList<String> mAttemptingUserID;
     private float mBuyInCost; // The amount of money used to buy in to attempt the dare
     private int mHoursToFinish;
-    private Parcelable[] mReviews = new Review[]{};
 
     //Dare progress
     private String mDescriptionImgURL; // The firebase storage url of the image that describes the dare
@@ -39,6 +38,7 @@ public class Dare implements Parcelable {
     private DareState mDareState = DareState.Available;
 
     protected Dare(Parcel in) {
+        mDareId = in.readString();
         mCreaterID = in.readString();
         mCreaterEmail = in.readString();
         mCreaterName = in.readString();
@@ -49,14 +49,15 @@ public class Dare implements Parcelable {
         mCompletionImgURL = in.readString();
         mBuyInCost = in.readFloat();
         mHoursToFinish = in.readInt();
-        mReviews= (in.readParcelableArray(getClass().getClassLoader()));
         long tempDate = in.readLong();
         mStartDate = tempDate == -1 ? null : new Date(tempDate);
         tempDate = in.readLong();
         mEndDate = tempDate == -1 ? null : new Date(tempDate);
-        mDareState = DareState.Available;  //TODO: temp, mDareState = (darestate)in.readSerializable();
+        mDareState = (DareState)in.readSerializable();
+        //mDareState = DareState.Available TODO: remove this before handing assignment
     }
 
+    //TODO: remove this before handing assignment
     public Dare(String createrID, String createrEmail, String createrName, String dareName, String description, float buyInCost, int hoursToFinish, String descriptionImgURL) {
         this.mCreaterID = createrID;
         this.mCreaterEmail = createrEmail;
@@ -66,7 +67,6 @@ public class Dare implements Parcelable {
         this.mAttemptingUserID = null;
         this.mBuyInCost = buyInCost;
         this.mHoursToFinish = hoursToFinish;
-        this.mReviews = null;
         this.mDescriptionImgURL = descriptionImgURL;
         this.mCompletionImgURL = null;
         this.mStartDate = null;
@@ -76,6 +76,7 @@ public class Dare implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mDareId);
         dest.writeString(mCreaterID);
         dest.writeString(mCreaterEmail);
         dest.writeString(mCreaterName);
@@ -86,7 +87,6 @@ public class Dare implements Parcelable {
         dest.writeString(mCompletionImgURL);
         dest.writeFloat(mBuyInCost);
         dest.writeInt(mHoursToFinish);
-        dest.writeParcelableArray(mReviews,PARCELABLE_WRITE_RETURN_VALUE);
         dest.writeLong(mStartDate != null ? mStartDate.getTime() : -1);
         dest.writeLong(mEndDate != null ? mEndDate.getTime() : -1);
         dest.writeSerializable(mDareState);
@@ -113,6 +113,7 @@ public class Dare implements Parcelable {
     @Override
     public String toString() {
         return "Dare{" +
+                "mDareID='" + mDareId + '\'' +
                 "mCreaterID='" + mCreaterID + '\'' +
                 ", mCreaterEmail='" + mCreaterEmail + '\'' +
                 ", mCreaterName='" + mCreaterName + '\'' +
@@ -120,7 +121,6 @@ public class Dare implements Parcelable {
                 ", mDescription='" + mDescription + '\'' +
                 ", mAttemptingUserID=" + mAttemptingUserID +
                 ", mBuyInCost=" + mBuyInCost +
-                ", mReviews=" + Arrays.toString(mReviews) +
                 ", mDescriptionImgURL='" + mDescriptionImgURL + '\'' +
                 ", mCompletionImgURL='" + mCompletionImgURL + '\'' +
                 ", mStartDate=" + mStartDate +
@@ -229,19 +229,19 @@ public class Dare implements Parcelable {
         this.mAttemptingUserID = mAttemptingUserID;
     }
 
-    public Review[] getReviews() {
-        return (Review[])mReviews;
-    }
-
-    public void setReviews(Review[] mReviews) {
-        this.mReviews = mReviews;
-    }
-
     public int getHoursToFinish() {
         return mHoursToFinish;
     }
 
     public void setmHoursToFinish(int mHoursToFinish) {
         this.mHoursToFinish = mHoursToFinish;
+    }
+
+    public String getDareId() {
+        return mDareId;
+    }
+
+    public void setDareId(String mDareId) {
+        this.mDareId = mDareId;
     }
 }

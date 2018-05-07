@@ -94,7 +94,8 @@ public class AllProductsActivity extends Activity {
                 Dare dare;
                 for (DataSnapshot dareSnapshot: dataSnapshot.getChildren()) {
                     dare = dareSnapshot.getValue(Dare.class);
-                    Log.e(TAG, "#$#Dare: " + dare.toString()); // Print for debugging
+                    dare.setDareId(dareSnapshot.getKey());
+                    Log.e(TAG, "#$#Dare: " + dare.toString()); // Print for debugging TODO: remove before assigning
                     mDaresList.add(dare);
                 }
 
@@ -105,7 +106,7 @@ public class AllProductsActivity extends Activity {
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
+                Log.e(TAG, "Failed to read value.", error.toException());
             }
         });
         Log.e(TAG, "getDaresFromDB() <<" );
