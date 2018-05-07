@@ -7,24 +7,20 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.deanoy.user.firebaseauthandconfig.DareDetailsActivity;
 import com.deanoy.user.firebaseauthandconfig.R;
 
-import java.util.ArrayList;
-import java.util.Date;
-
 public class DareViewHolder extends RecyclerView.ViewHolder{
 
     private static String TAG = "DareViewHolder";
     private CardView mDareCardView;
-    private TextView mCreaterName;
+    private TextView mCreatorName;
     private TextView mDareName;
     private TextView mDescription;
-    private TextView mBuyInCost; // The amount of money used to buy in to attempt the dare
-    private ImageView mDescriptionImg; // The image that describes the dare
+    private TextView mPrice;
+    private ImageView mDareImg; // The image that describes the dare
     private Dare mSelectedDare;
     private Context mContext;
 
@@ -32,6 +28,11 @@ public class DareViewHolder extends RecyclerView.ViewHolder{
         super(itemView);
 
         mDareCardView = itemView.findViewById(R.id.cvDare);
+        mCreatorName = itemView.findViewById(R.id.tvPublisher);
+        mDareName = itemView.findViewById(R.id.tvDareName);
+        mDescription = itemView.findViewById(R.id.tvDareDescription);
+        mPrice = itemView.findViewById(R.id.tvPrice);
+        mDareImg = itemView.findViewById(R.id.ivDareImage);
         mContext = context;
 
         mDareCardView.setOnClickListener(new View.OnClickListener() {
@@ -55,4 +56,28 @@ public class DareViewHolder extends RecyclerView.ViewHolder{
         mSelectedDare = dare;
     }
 
+    public TextView getDareName()
+    {
+        return mDareName;
+    }
+
+    public TextView getCreatorName()
+    {
+        return mCreatorName;
+    }
+
+    public TextView getDescription()
+    {
+        return mDescription;
+    }
+
+    public TextView getPrice()
+    {
+        return mPrice;
+    }
+
+    public ImageView getDareImage()
+    {
+        return mDareImg;
+    }
 }

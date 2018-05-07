@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.facebook.LoginStatusCallback;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -23,12 +24,14 @@ import java.util.List;
 import Models.Dare;
 import Models.DaresAdapter;
 
+import static java.lang.Thread.sleep;
+
 public class AllProductsActivity extends Activity {
     private static String TAG = "AllProductsActivity";
 
     private FirebaseAuth mAuth;
-    FirebaseDatabase mDatabase ;
-    DatabaseReference mDatabaseDaresRef ;
+    private FirebaseDatabase mDatabase ;
+    private DatabaseReference mDatabaseDaresRef ;
     private RecyclerView mDaresView;
     private DaresAdapter mDaresAdapter;
     private List<Dare> mDaresList = new ArrayList<>();
@@ -82,10 +85,10 @@ public class AllProductsActivity extends Activity {
     protected void onDestroy() {
         Log.e(TAG, "onDestroy >>");
 
-        super.onDestroy();
         mAuth.signOut();
         LoginManager.getInstance().logOut();
-        
+        super.onDestroy();
+
         Log.e(TAG, "onDestroy <<");
     }
 

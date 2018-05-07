@@ -25,48 +25,75 @@
 
             <TextView
                 android:id="@+id/tvDareName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="4dp"
-                android:text="Dare Name"
+                android:layout_width="191dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="56dp"
+                android:layout_marginTop="8dp"
+                android:text="Name:"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvDareDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="339dp"
+                android:layout_height="30dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="8dp"
-                android:text="Dare Description"
+                android:text="Description:"
                 card_view:layout_constraintBottom_toBottomOf="parent"
                 card_view:layout_constraintLeft_toLeftOf="parent"
                 card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/tvDareName"
-                card_view:layout_constraintVertical_bias="0.275" />
+                card_view:layout_constraintTop_toBottomOf="@+id/tvPublisher"
+                card_view:layout_constraintVertical_bias="1.0" />
 
             <TextView
                 android:id="@+id/tvPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_width="91dp"
+                android:layout_height="21dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="4dp"
                 android:text="[Price]"
                 card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintRight_toRightOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tvProfit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+            <ImageView
+                android:id="@+id/ivDareImage"
+                android:layout_width="44dp"
+                android:layout_height="43dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
-                android:text="[Profit]"
+                android:src="@android:drawable/star_big_off"
+                app:srcCompat="@mipmap/ic_launcher_round"
+                card_view:layout_constraintLeft_toLeftOf="parent"
+                card_view:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btnBuy"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="90dp"
+                android:layout_height="38dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginTop="8dp"
+                android:text="Buy"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                card_view:layout_constraintBottom_toTopOf="@+id/tvDareDescription"
                 card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/tvPrice" />
+
+            <TextView
+                android:id="@+id/tvPublisher"
+                android:layout_width="192dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="56dp"
+                android:layout_marginTop="8dp"
+                android:text="Publisher:"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/tvDareName" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

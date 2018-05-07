@@ -1,5 +1,6 @@
 package Models;
 
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,7 +41,13 @@ public class DaresAdapter extends RecyclerView.Adapter<DareViewHolder> {
 
         Dare dare = mDaresList.get(position);
 
+        // bind dare data to it's view items
         holder.setSelectedDare(dare);
+        holder.getDareName().setText("Name: " + dare.getDareName());
+        holder.getCreatorName().setText("Publisher: " + dare.getCreaterName());
+        holder.getPrice().setText("Price: " + dare.getBuyInCost());
+        holder.getDescription().setText("I dare you To: " + dare.getDescription());
+        //TODO: load image from database and show it in Dare image view
 
         Log.e(TAG,"onBindViewHolder() << "+ position);
     }
