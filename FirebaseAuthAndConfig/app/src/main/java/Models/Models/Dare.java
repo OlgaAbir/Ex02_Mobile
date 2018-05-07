@@ -16,7 +16,7 @@ import java.util.Date;
 public class Dare implements Parcelable {
     public Dare() {}
 
-    //Creater details
+    //Creator details
     private String mCreaterID;
     private String mCreaterEmail;
     private String mCreaterName;

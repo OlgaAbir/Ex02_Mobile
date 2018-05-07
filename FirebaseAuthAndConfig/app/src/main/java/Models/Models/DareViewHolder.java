@@ -6,23 +6,25 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.deanoy.user.firebaseauthandconfig.DareDetailsActivity;
 import com.deanoy.user.firebaseauthandconfig.R;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 public class DareViewHolder extends RecyclerView.ViewHolder{
 
     private static String TAG = "DareViewHolder";
     private CardView mDareCardView;
+    private TextView mCreaterName;
     private TextView mDareName;
-    private TextView mPublisherName;
-    private TextView mPrice;
-    private TextView mProfit;
-    private TextView mReviewsCount;
-    private TextView mDareDescription;
-    private RatingBar mRating;
+    private TextView mDescription;
+    private TextView mBuyInCost; // The amount of money used to buy in to attempt the dare
+    private ImageView mDescriptionImg; // The image that describes the dare
     private Dare mSelectedDare;
     private Context mContext;
 
