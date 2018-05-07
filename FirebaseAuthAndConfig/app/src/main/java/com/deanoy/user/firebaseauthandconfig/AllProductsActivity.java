@@ -9,7 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.facebook.LoginStatusCallback;
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +24,14 @@ import java.util.List;
 import Models.Dare;
 import Models.DaresAdapter;
 
+import static java.lang.Thread.sleep;
+
 public class AllProductsActivity extends Activity {
     private static String TAG = "AllProductsActivity";
 
     private FirebaseAuth mAuth;
+    private FirebaseDatabase mDatabase ;
+    private DatabaseReference mDatabaseDaresRef ;
     private RecyclerView mDaresView;
     private DaresAdapter mDaresAdapter;
     private List<Dare> mDaresList = new ArrayList<>();
@@ -31,6 +42,9 @@ public class AllProductsActivity extends Activity {
         setContentView(R.layout.activity_all_products);
 
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance();
+        mDatabaseDaresRef  = mDatabase.getReference("Dares");
+
         mDaresView = findViewById(R.id.recyclerView);
         mDaresView.setHasFixedSize(true);
         mDaresView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -45,7 +59,7 @@ public class AllProductsActivity extends Activity {
         mDaresAdapter = new DaresAdapter(mDaresList);
         mDaresView.setAdapter(mDaresAdapter);
 
-        //TODO:bind mDaresList to get dares from database
+        getDaresFromDB();
     }
 
     public void onViewYourProfileClick(View v) {
@@ -65,5 +79,35 @@ public class AllProductsActivity extends Activity {
         {
             finish();
         }
+    }
+
+    private void getDaresFromDB() {
+        Log.e(TAG, "getDaresFromDB() >>" );
+
+        // Read from the database
+        mDatabaseDaresRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                Log.e(TAG, "onDataChange() >>" );
+                Dare dare;
+                for (DataSnapshot dareSnapshot: dataSnapshot.getChildren()) {
+                    dare = dareSnapshot.getValue(Dare.class);
+                    Log.e(TAG, "#$#Dare: " + dare.toString()); // Print for debugging
+                    mDaresList.add(dare);
+                }
+
+                mDaresView.getAdapter().notifyDataSetChanged();
+                Log.e(TAG, "onDataChange() <<" );
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+        Log.e(TAG, "getDaresFromDB() <<" );
     }
 }

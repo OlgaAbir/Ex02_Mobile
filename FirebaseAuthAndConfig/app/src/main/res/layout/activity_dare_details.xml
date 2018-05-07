@@ -6,4 +6,132 @@
     android:layout_height="match_parent"
     tools:context="com.deanoy.user.firebaseauthandconfig.DareDetailsActivity">
 
+    <FrameLayout
+        android:id="@+id/filter_bar_container"
+        android:layout_width="match_parent"
+        android:layout_height="217dp"
+        android:background="@color/com_facebook_button_background_color_disabled"
+        android:paddingBottom="12dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="4dp">
+
+            <TextView
+                android:id="@+id/tvDetailsDareName"
+                android:layout_width="240dp"
+                android:layout_height="39dp"
+                android:layout_marginStart="8dp"
+                android:text="Name:"
+                android:textColor="@color/colorPrimary"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ivDetailsDareImage"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvDetailsPublisher"
+                android:layout_width="241dp"
+                android:layout_height="27dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="20dp"
+                android:text="Publisher:"
+                android:textColor="@color/colorAccent"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvDetailsDareName" />
+
+            <Button
+                android:id="@+id/btnBuy"
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:layout_marginTop="144dp"
+                android:background="@android:color/holo_green_light"
+                android:onClick="onBuyClick"
+                android:text="Buy"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/ivDetailsDareImage"
+                android:layout_width="72dp"
+                android:layout_height="59dp"
+                android:src="@android:drawable/star_big_off"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvDetailsDescription"
+                android:layout_width="205dp"
+                android:layout_height="56dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="84dp"
+                android:text="Description:"
+                android:textColor="@color/colorAccent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ivDetailsDareImage" />
+
+            <TextView
+                android:id="@+id/tvDetailsPrice"
+                android:layout_width="123dp"
+                android:layout_height="35dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="16dp"
+                android:text="Price"
+                android:textColor="@color/colorAccent"
+                app:layout_constraintBottom_toTopOf="@+id/btnBuy"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <TextView
+                android:id="@+id/tvDetailsProfit"
+                android:layout_width="104dp"
+                android:layout_height="35dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="52dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Profit:"
+                android:textColor="@color/colorAccent"
+                app:layout_constraintBottom_toTopOf="@+id/tvDetailsDescription"
+                app:layout_constraintEnd_toStartOf="@+id/tvDetailsPrice"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvDetailsPublisher"
+                app:layout_constraintVertical_bias="1.0" />
+        </android.support.constraint.ConstraintLayout>
+
+    </FrameLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/dare_reviews"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filter_bar_container" />
+
+    <Button
+        android:id="@+id/btnAddReview"
+        android:layout_width="154dp"
+        android:layout_height="41dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:onClick="onAddReviewClick"
+        android:text="Add Review"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

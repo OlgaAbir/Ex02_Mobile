@@ -8,7 +8,7 @@
     >
 
     <android.support.v7.widget.CardView
-        android:id="@+id/card_view_song"
+        android:id="@+id/cvDare"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:layout_gravity="center"
@@ -25,26 +25,69 @@
 
             <TextView
                 android:id="@+id/tvDareName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="4dp"
-                android:text="Dare Name"
+                android:layout_width="213dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="132dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:text="Name:"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                card_view:layout_constraintStart_toEndOf="@+id/ivDareImage" />
 
             <TextView
-                android:id="@+id/tvDareDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/tvPrice"
+                android:layout_width="105dp"
+                android:layout_height="22dp"
                 android:layout_marginBottom="8dp"
-                android:layout_marginStart="20dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="16dp"
                 android:layout_marginTop="8dp"
-                android:text="Dare Description"
+                android:text="[Price]"
                 card_view:layout_constraintBottom_toBottomOf="parent"
-                card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/tvDareName"
-                card_view:layout_constraintVertical_bias="0.275" />
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintRight_toRightOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/tvPublisher"
+                card_view:layout_constraintVertical_bias="0.0" />
+
+            <ImageView
+                android:id="@+id/ivDareImage"
+                android:layout_width="93dp"
+                android:layout_height="90dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:src="@android:drawable/star_big_off"
+                app:srcCompat="@mipmap/ic_launcher_round"
+                card_view:layout_constraintLeft_toLeftOf="parent"
+                card_view:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvPublisher"
+                android:layout_width="210dp"
+                android:layout_height="27dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Publisher:"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintHorizontal_bias="0.275"
+                card_view:layout_constraintRight_toRightOf="parent"
+                card_view:layout_constraintStart_toEndOf="@+id/ivDareImage"
+                card_view:layout_constraintTop_toBottomOf="@+id/tvDareName" />
+
+            <TextView
+                android:id="@+id/tvProfit"
+                android:layout_width="100dp"
+                android:layout_height="23dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="8dp"
+                android:text="profit"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintEnd_toStartOf="@+id/tvPrice"
+                card_view:layout_constraintTop_toBottomOf="@+id/tvPublisher"
+                card_view:layout_constraintVertical_bias="0.0" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

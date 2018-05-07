@@ -71,8 +71,7 @@ public class UserProfileActivity extends Activity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         Log.e(TAG, "onCreate >>");
 
         super.onCreate(savedInstanceState);
@@ -80,7 +79,7 @@ public class UserProfileActivity extends Activity {
 
         // binding and initialization
         mAuth = FirebaseAuth.getInstance();
-        mtvUserName =  findViewById(R.id.tvUserNameAppHome);
+        mtvUserName = findViewById(R.id.tvUserNameAppHome);
         mivUserProfilePicture = findViewById(R.id.ivProfilePictureAppHome);
         mLoggedInUser = mAuth.getCurrentUser();
         mtvUserEmail = findViewById(R.id.tvEmailAddressAppHome);
@@ -88,51 +87,41 @@ public class UserProfileActivity extends Activity {
         mbtnVerifyEmail = findViewById(R.id.btnVerifyEmailAppHome);
         setUI();
         //tempLoadToDatabase(); //TODO: This is a temp function for creating the dummy dares. Remove before finishing assignment
-        getDaresFromDB();
+        //getDaresFromDB();
 
         Log.e(TAG, "onCreate <<");
     }
 
     //TODO: This is a temp function for creating the dummy dares. Remove before finishing assignment
+    /*
     private void tempLoadToDatabase() {
         Dare dare;
         //ArrayList<Dare> daresList = new ArrayList<Dare>();
         DatabaseReference dareRef = FirebaseDatabase.getInstance().getReference("Dares");
         String dbKey;
 
-        for(int i = 0; i < 100; i++) { // Create fake dares
-            if(i % 3 == 0) { // Olga
+        for (int i = 0; i < 100; i++) { // Create fake dares
+            if (i % 3 == 0) { // Olga
                 dare = new Dare("0Aq19XxCdla2b3ymOlDxI1baK283", "olgaabirhaim@gmail.com", "Olga",
-                        "Olga's game", "Bomb a national monument", (float)50, 24, "description.img");
-            }else if(i % 3 == 1) { // Dean
+                        "Olga's game", "Bomb a national monument", (float) 50, 24, "description.img");
+            } else if (i % 3 == 1) { // Dean
                 dare = new Dare("YPmMm9PjTTXdxwSWGJCSL8JntXo1", "rustykopo@gmail.com", "Dean",
-                        "Dean's trial", "Execute a government official", (float)2, 48, "description.img");
+                        "Dean's trial", "Execute a government official", (float) 2, 48, "description.img");
             } else {
                 dare = new Dare("X4SkI6HiHVSUM8cXBcpU9zW3OXt1", "olga_94@live.ru", "Olga2",
-                        "No guts no glory", "Steal Idan's Mercedes", (float)500, 8, "description.img");
+                        "No guts no glory", "Steal Idan's Mercedes", (float) 500, 8, "description.img");
             }
 
             dbKey = dareRef.push().getKey();
             dareRef.child(dbKey).setValue(dare);
         }
-
-
     }
-
-    @Override
-    protected void onDestroy() {
-        Log.e(TAG, "onDestroy >>");
-
-        super.onDestroy();
-        signOut();
-
-        Log.e(TAG, "onDestroy <<");
-    }
+    */
 
     private void setUI() {
         displayLoggedInUserProfile();
         // User signed in using facebook/google.
-        if(isUsingAuthMethod(FACEBOOK_AUTH) || isUsingAuthMethod(GMAIL_AUTH) || mLoggedInUser.isAnonymous()) {
+        if (isUsingAuthMethod(FACEBOOK_AUTH) || isUsingAuthMethod(GMAIL_AUTH) || mLoggedInUser.isAnonymous()) {
             // Set UI accordingly
             mbtnChangePassword.setVisibility(View.INVISIBLE);
             mbtnVerifyEmail.setVisibility(View.INVISIBLE);
@@ -142,7 +131,7 @@ public class UserProfileActivity extends Activity {
             mbtnVerifyEmail.setVisibility(View.VISIBLE);
             mivUserProfilePicture.setVisibility(View.INVISIBLE);
         }
-        if(mLoggedInUser.isEmailVerified()){
+        if (mLoggedInUser.isEmailVerified()) {
             mbtnVerifyEmail.setVisibility(View.INVISIBLE);
         }
     }
@@ -161,49 +150,42 @@ public class UserProfileActivity extends Activity {
         return isUsingAuthMethod;
     }
 
-    private void displayLoggedInUserProfile()
-    {
-        if(mLoggedInUser != null && !mLoggedInUser.isAnonymous()) // None anonymous user
+    private void displayLoggedInUserProfile() {
+        if (mLoggedInUser != null && !mLoggedInUser.isAnonymous()) // None anonymous user
         {
             mbtnChangePassword.setVisibility(View.VISIBLE);
             mtvUserEmail.setVisibility(View.VISIBLE);
-            Log.e(TAG, "isEmailVerified << "+ mLoggedInUser.isEmailVerified());
+            Log.e(TAG, "isEmailVerified << " + mLoggedInUser.isEmailVerified());
 
-            if(mLoggedInUser.getDisplayName() == null || mLoggedInUser.getDisplayName().isEmpty()) // no available name
+            if (mLoggedInUser.getDisplayName() == null || mLoggedInUser.getDisplayName().isEmpty()) // no available name
             {
                 mtvUserName.setText("Display Name: unconfigured");
-            }
-            else
-            {
+            } else {
                 Log.e(TAG, "onCreate >> User name: " + mLoggedInUser.getDisplayName());
                 mtvUserName.setText(mLoggedInUser.getDisplayName());
             }
 
-            if(mLoggedInUser.getPhotoUrl() != null && !mLoggedInUser.getPhotoUrl().toString().isEmpty())
-            {
+            if (mLoggedInUser.getPhotoUrl() != null && !mLoggedInUser.getPhotoUrl().toString().isEmpty()) {
                 Log.e(TAG, "onCreate >> User profile pic url: " + mLoggedInUser.getPhotoUrl());
 
                 String imageString = mLoggedInUser.getPhotoUrl().toString();
 
-                if(isUsingAuthMethod(FACEBOOK_AUTH)){
+                if (isUsingAuthMethod(FACEBOOK_AUTH)) {
                     imageString = mLoggedInUser.getPhotoUrl().toString() + "/picture?width=200&height=200";
                 }
-                if((isUsingAuthMethod(FACEBOOK_AUTH) || isUsingAuthMethod(GMAIL_AUTH))) {
+                if ((isUsingAuthMethod(FACEBOOK_AUTH) || isUsingAuthMethod(GMAIL_AUTH))) {
                     new DownloadImageTask(mivUserProfilePicture)
                             .execute(imageString);
-                }
-                else{
+                } else {
                     mivUserProfilePicture.setImageURI(mLoggedInUser.getPhotoUrl());
                 }
             }
 
-            if(mLoggedInUser.getEmail() != null && !mLoggedInUser.getEmail().isEmpty())
-            {
+            if (mLoggedInUser.getEmail() != null && !mLoggedInUser.getEmail().isEmpty()) {
                 Log.e(TAG, "onCreate >> User email: " + mLoggedInUser.getEmail());
                 mtvUserEmail.setText("Email: " + mLoggedInUser.getEmail());
             }
-        }
-        else if(mLoggedInUser.isAnonymous()) // Set anonymous user UI
+        } else if (mLoggedInUser.isAnonymous()) // Set anonymous user UI
         {
             mtvUserName.setText("Anonymous");
             mbtnVerifyEmail.setVisibility(View.INVISIBLE);
@@ -212,8 +194,7 @@ public class UserProfileActivity extends Activity {
         }
     }
 
-    public void onSignOutClick(View v)
-    {
+    public void onSignOutClick(View v) {
         Log.e(TAG, "onSignoutClick >>");
 
         signOut();
@@ -232,15 +213,13 @@ public class UserProfileActivity extends Activity {
         Log.e(TAG, "signOut <<");
     }
 
-    public void onChangePasswordClick(View v)
-    {
+    public void onChangePasswordClick(View v) {
         Intent i = new Intent(getApplicationContext(), ChangePasswordActivity.class);
 
         startActivity(i);
     }
 
-    public void onVerifyEmailClick(View v)
-    {
+    public void onVerifyEmailClick(View v) {
         mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -253,34 +232,4 @@ public class UserProfileActivity extends Activity {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    private void getDaresFromDB() {
-        Log.e(TAG, "getDaresFromDB() >>" );
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("Dares");
-
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                Log.e(TAG, "onDataChange() >>" );
-                Dare dare;
-                ArrayList<Dare> dares = new ArrayList<Dare>();
-                for (DataSnapshot dareSnapshot: dataSnapshot.getChildren()) {
-                    dare = dareSnapshot.getValue(Dare.class);
-                    Log.e(TAG, "#$#Dare: " + dare.toString()); // Print for debugging
-                    dares.add(dare);
-                }
-                Log.e(TAG, "onDataChange() <<" );
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
-        Log.e(TAG, "getDaresFromDB() <<" );
-    }
 }

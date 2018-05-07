@@ -40,7 +40,13 @@ public class DaresAdapter extends RecyclerView.Adapter<DareViewHolder> {
 
         Dare dare = mDaresList.get(position);
 
+        // bind dare data to it's view items
         holder.setSelectedDare(dare);
+        holder.getDareName().setText("Name: " + dare.getDareName());
+        holder.getCreatorName().setText("Publisher: " + dare.getCreaterName());
+        holder.getPrice().setText("Price: " + dare.getBuyInCost());
+        holder.getProfit().setText("Profit: " + dare.getProfit());
+        //TODO: load image from database and show it in Dare image view
 
         Log.e(TAG,"onBindViewHolder() << "+ position);
     }

@@ -76,8 +76,10 @@ public class MainActivity extends Activity {
         Log.e(TAG, "onStart >>");
 
         super.onStart();
+
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+
         displayUserDetails(currentUser);
         setUI();
 
@@ -322,6 +324,7 @@ public class MainActivity extends Activity {
         Intent i = new Intent(getApplicationContext(), AllProductsActivity.class);
 
         startActivity(i);
+        finish();
     }
 
     private void startDisplaySignUpScreen()
