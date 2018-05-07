@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by user on 28-Apr-18.
@@ -27,7 +28,7 @@ public class Dare implements Parcelable {
     private ArrayList<String> mAttemptingUserID;
     private float mBuyInCost; // The amount of money used to buy in to attempt the dare
     private int mHoursToFinish;
-    private Review[] mReviews = new Review[] {};
+    private Parcelable[] mReviews = new Review[]{};
 
     //Dare progress
     private String mDescriptionImgURL; // The firebase storage url of the image that describes the dare
@@ -47,7 +48,7 @@ public class Dare implements Parcelable {
         mCompletionImgURL = in.readString();
         mBuyInCost = in.readFloat();
         mHoursToFinish = in.readInt();
-        mReviews = (Review[])in.readParcelableArray(getClass().getClassLoader());
+        mReviews= (in.readParcelableArray(getClass().getClassLoader()));
         long tempDate = in.readLong();
         mStartDate = tempDate == -1 ? null : new Date(tempDate);
         tempDate = in.readLong();
@@ -84,7 +85,7 @@ public class Dare implements Parcelable {
         dest.writeString(mCompletionImgURL);
         dest.writeFloat(mBuyInCost);
         dest.writeInt(mHoursToFinish);
-        dest.writeParcelableArray(mReviews, PARCELABLE_WRITE_RETURN_VALUE);
+        dest.writeParcelableArray(mReviews,PARCELABLE_WRITE_RETURN_VALUE);
         dest.writeLong(mStartDate != null ? mStartDate.getTime() : -1);
         dest.writeLong(mEndDate != null ? mEndDate.getTime() : -1);
         dest.writeSerializable(mDareState);
@@ -228,7 +229,7 @@ public class Dare implements Parcelable {
     }
 
     public Review[] getReviews() {
-        return mReviews;
+        return (Review[])mReviews;
     }
 
     public void setReviews(Review[] mReviews) {

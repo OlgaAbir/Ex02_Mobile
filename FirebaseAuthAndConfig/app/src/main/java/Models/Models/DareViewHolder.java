@@ -39,7 +39,7 @@ public class DareViewHolder extends RecyclerView.ViewHolder{
             @Override
             public void onClick(View view) {
 
-                Log.e(TAG, "CardView.onClick() >> name=" + mSelectedDare);
+                Log.e(TAG, "CardView.onClick() >> name=" + mSelectedDare.getDareName());
 
                 Context context = view.getContext();
                 Intent intent = new Intent(context, DareDetailsActivity.class);
