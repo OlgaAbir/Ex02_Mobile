@@ -10,42 +10,54 @@ import java.util.Date;
  */
 
 public class Review implements Parcelable {
-    public Review() {}
 
     private String mId;
     private String mText;
     private String mWriterID;
+    private String mWriterName;// TODO: Dean add this to reviews database please and generate reviews in the database
     private Date mCreationDate;
 
-    public String getmId() {
+    public Review() {}
+
+    public String getWriterName()
+    {
+        return mWriterName;
+    }
+
+    public void setWriterName(String writerName)
+    {
+        mWriterName = writerName;
+    }
+
+    public String getId() {
         return mId;
     }
 
-    public void setmId(String mId) {
+    public void setId(String mId) {
         this.mId = mId;
     }
 
-    public String getmText() {
+    public String getText() {
         return mText;
     }
 
-    public void setmText(String mText) {
+    public void setText(String mText) {
         this.mText = mText;
     }
 
-    public String getmWriterID() {
+    public String getWriterID() {
         return mWriterID;
     }
 
-    public void setmWriterID(String mWriterID) {
+    public void setWriterID(String mWriterID) {
         this.mWriterID = mWriterID;
     }
 
-    public Date getmCreationDate() {
+    public Date getCreationDate() {
         return mCreationDate;
     }
 
-    public void setmCreationDate(Date mCreationDate) {
+    public void setCreationDate(Date mCreationDate) {
         this.mCreationDate = mCreationDate;
     }
 
