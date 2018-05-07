@@ -81,17 +81,6 @@ public class AllProductsActivity extends Activity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        Log.e(TAG, "onDestroy >>");
-
-        mAuth.signOut();
-        LoginManager.getInstance().logOut();
-        super.onDestroy();
-
-        Log.e(TAG, "onDestroy <<");
-    }
-
     private void getDaresFromDB() {
         Log.e(TAG, "getDaresFromDB() >>" );
 

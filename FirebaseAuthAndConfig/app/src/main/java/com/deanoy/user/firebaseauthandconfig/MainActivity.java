@@ -56,7 +56,6 @@ public class MainActivity extends Activity {
     private SignInButton mGoogleSignInButton;
     private CallbackManager mFacebookCallbackManager;
     private LoginButton mFacebookLoginButton;
-    private boolean mIsFirstStart;
 
     private boolean mIsAnonymousSignInEnabled;
 
@@ -66,7 +65,6 @@ public class MainActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mIsFirstStart = true;
         initFirebaseServices();
         bindUI();
 
@@ -80,16 +78,8 @@ public class MainActivity extends Activity {
         super.onStart();
 
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = null;
+        FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        // if not first start than we came to this screen from pressing back-
-        // don't want to get current user because he is in sign out process
-        if(mIsFirstStart)
-        {
-            currentUser = mAuth.getCurrentUser();
-        }
-        
-        mIsFirstStart = false;
         displayUserDetails(currentUser);
         setUI();
 
@@ -334,6 +324,7 @@ public class MainActivity extends Activity {
         Intent i = new Intent(getApplicationContext(), AllProductsActivity.class);
 
         startActivity(i);
+        finish();
     }
 
     private void startDisplaySignUpScreen()
