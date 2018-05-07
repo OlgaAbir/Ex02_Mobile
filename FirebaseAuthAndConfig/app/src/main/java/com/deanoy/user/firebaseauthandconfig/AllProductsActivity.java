@@ -8,6 +8,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.facebook.LoginStatusCallback;
 import com.facebook.login.LoginManager;
@@ -19,7 +23,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import Models.Dare;
 import Models.DaresAdapter;
@@ -34,7 +41,14 @@ public class AllProductsActivity extends Activity {
     private DatabaseReference mDatabaseDaresRef ;
     private RecyclerView mDaresView;
     private DaresAdapter mDaresAdapter;
+    private ArrayAdapter<String> mNamesAdapter;
+    private TreeSet<String> mNameSet = new TreeSet<String>();
+    private ArrayList<String> mNamesArray = new ArrayList<String>();
     private List<Dare> mDaresList = new ArrayList<>();
+
+    // UI
+    private Spinner mspnNames;
+    private EditText metMinProfit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +59,23 @@ public class AllProductsActivity extends Activity {
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseDaresRef  = mDatabase.getReference("Dares");
 
+        //UI
+        mspnNames = findViewById(R.id.spnUserNames);
         mDaresView = findViewById(R.id.recyclerView);
+
         mDaresView.setHasFixedSize(true);
         mDaresView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         mDaresView.setItemAnimator(new DefaultItemAnimator());
+
+        mNameSet.clear();
+        mNamesAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, mNamesArray);
+
+        mspnNames.setAdapter(mNamesAdapter);
 
         getAllDares();
     }
 
     private void getAllDares() {
-
         mDaresList.clear();
         mDaresAdapter = new DaresAdapter(mDaresList);
         mDaresView.setAdapter(mDaresAdapter);
@@ -91,15 +112,21 @@ public class AllProductsActivity extends Activity {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 Log.e(TAG, "onDataChange() >>" );
+                mDaresList.clear();
+                mNamesArray.clear();
+                mNameSet.clear();
                 Dare dare;
                 for (DataSnapshot dareSnapshot: dataSnapshot.getChildren()) {
                     dare = dareSnapshot.getValue(Dare.class);
                     dare.setDareId(dareSnapshot.getKey());
                     Log.e(TAG, "#$#Dare: " + dare.toString()); // Print for debugging TODO: remove before assigning
                     mDaresList.add(dare);
+                    mNameSet.add(dare.getCreaterName());
                 }
 
                 mDaresView.getAdapter().notifyDataSetChanged();
+                mNamesArray.addAll(mNameSet);
+                //mspnNames.setAdapter(mNamesAdapter); //TODO: try assigning items in a different way
                 Log.e(TAG, "onDataChange() <<" );
             }
 
