@@ -181,6 +181,4 @@ public class AllProductsActivity extends Activity {
         });
         Log.e(TAG, "getDaresFromDB() <<" );
     }
-
-
 }

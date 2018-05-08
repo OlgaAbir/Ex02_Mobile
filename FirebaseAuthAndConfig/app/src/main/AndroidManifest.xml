@@ -48,10 +48,10 @@
         <activity android:name=".SignUpActivity" />
         <activity android:name=".ChangePasswordActivity" />
         <activity
-            android:windowSoftInputMode="adjustPan"
             android:name=".AllProductsActivity"
-        />
-        <activity android:name=".DareDetailsActivity"></activity>
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".DareDetailsActivity" />
+        <activity android:name=".WriteReviewActivity"></activity>
     </application>
 
 </manifest>

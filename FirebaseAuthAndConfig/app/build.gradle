@@ -41,8 +41,8 @@ configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
         def requested = details.requested
         if (requested.group == 'com.google.firebase') {
-                details.useVersion '15.0.0'
-        } else if(requested.group == 'com.google.android.gms') {
+            details.useVersion '15.0.0'
+        } else if (requested.group == 'com.google.android.gms') {
             details.useVersion '15.0.0'
         }
 

@@ -1,6 +1,7 @@
 package com.deanoy.user.firebaseauthandconfig;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,7 +17,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import Models.Dare;
@@ -36,6 +35,8 @@ public class DareDetailsActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Log.e(TAG, "onCreate >>" );
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dare_details);
         mSelectedDare = getIntent().getParcelableExtra("dare");
@@ -54,6 +55,7 @@ public class DareDetailsActivity extends Activity {
         mReviewsView .setItemAnimator(new DefaultItemAnimator());
 
         getReviews();
+        Log.e(TAG, "onCreate <<" );
     }
 
     private void getReviews()
@@ -103,16 +105,10 @@ public class DareDetailsActivity extends Activity {
     {
         Log.e(TAG, "onAddReviewClick() >>" );
 
-        Review newReview = new Review();
-        newReview.setCreationDate(new Date());
-        newReview.setText("Best review");
-        newReview.setWriterID(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        newReview.setWriterName("Dividend");
+        Intent writeReviewIntent = new Intent(getApplicationContext(), DareDetailsActivity.class);
+        writeReviewIntent.putExtra("dareID", mSelectedDare.getDareId());
+        startActivity(writeReviewIntent);
 
-        String newReviewKey = mReviewsDatabaseRef.push().getKey();
-        mReviewsDatabaseRef.child(newReviewKey).setValue(newReview);
-        // TODO: I (Olga) will implement this :
-        // - create write review activity for this
-        Log.e(TAG, "onAddReviewClick() << + newReview: " + newReview.toString());
+        Log.e(TAG, "onAddReviewClick() << ");
     }
 }
