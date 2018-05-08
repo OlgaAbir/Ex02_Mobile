@@ -17,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import Models.Dare;
@@ -79,6 +80,17 @@ public class DareDetailsActivity extends Activity {
                     review = reviewSnapshot.getValue(Review.class);
                     Log.e(TAG, "#$#Review: " + review.toString()); // Print for debugging TODO: remove before assigning
                     mReviewsList.add(review);
+                    // newer review will appear first
+                    mReviewsList.sort( new Comparator<Review>() {
+                                           public int compare(Review r1, Review r2) {
+                                               if (r1.getCreationDate().after(r2.getCreationDate())) {
+
+                                                   return  -1;
+                                               }
+
+                                               return 1;
+                                           }
+                                       });
                 }
 
                 mReviewsView.getAdapter().notifyDataSetChanged();
@@ -105,7 +117,7 @@ public class DareDetailsActivity extends Activity {
     {
         Log.e(TAG, "onAddReviewClick() >>" );
 
-        Intent writeReviewIntent = new Intent(getApplicationContext(), DareDetailsActivity.class);
+        Intent writeReviewIntent = new Intent(getApplicationContext(), WriteReviewActivity.class);
         writeReviewIntent.putExtra("dareID", mSelectedDare.getDareId());
         startActivity(writeReviewIntent);
 

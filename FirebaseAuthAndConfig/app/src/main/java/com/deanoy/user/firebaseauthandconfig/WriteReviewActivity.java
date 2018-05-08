@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -52,6 +53,13 @@ public class WriteReviewActivity extends Activity {
         String newReviewKey = mReviewsDatabaseRef.push().getKey();
         mReviewsDatabaseRef.child(newReviewKey).setValue(newReview);
 
+        displayMessage("Review was added successfully");
+        finish();
+
         Log.e(TAG, "onSubmitReview <<" );
+    }
+
+    private void displayMessage(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 }
