@@ -47,7 +47,10 @@
         <activity android:name=".PasswordResetActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".ChangePasswordActivity" />
-        <activity android:name=".AllProductsActivity" />
+        <activity
+            android:windowSoftInputMode="adjustPan"
+            android:name=".AllProductsActivity"
+        />
         <activity android:name=".DareDetailsActivity"></activity>
     </application>
 

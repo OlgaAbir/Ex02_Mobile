@@ -49,6 +49,8 @@ public class AllProductsActivity extends Activity {
     private TreeSet<String> mNameSet = new TreeSet<String>();
     private ArrayList<String> mNamesArray = new ArrayList<String>();
     private List<Dare> mDaresList = new ArrayList<>();
+    private ArrayList<Dare> mTempDareArray = new ArrayList<>(); // for backing up dares
+
 
     // UI
     private Spinner mspnNames;
@@ -66,19 +68,7 @@ public class AllProductsActivity extends Activity {
 
         //UI
         mspnNames = findViewById(R.id.spnUserNames);
-        mspnNames.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.e(TAG, "onItemSelected >> " + adapterView.getContext());
-                Toast.makeText(adapterView.getContext(), "Selected item: " + adapterView.getItemAtPosition(i), Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "onItemSelected << ");
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+        metMinProfit = findViewById(R.id.etMinProfit);
         mDaresView = findViewById(R.id.recyclerView);
 
         mDaresView.setHasFixedSize(true);
@@ -94,22 +84,6 @@ public class AllProductsActivity extends Activity {
         Log.e(TAG, "onCreate <<");
     }
 
-    private void getAllDares() {
-        mDaresList.clear();
-        mDaresAdapter = new DaresAdapter(mDaresList);
-        mDaresView.setAdapter(mDaresAdapter);
-
-        getDaresFromDB();
-    }
-
-    public void onViewYourProfileClick(View v) {
-        Log.e(TAG, "onViewYourProfileClick >>");
-
-        Intent showProfile = new Intent(this, UserProfileActivity.class);
-
-        startActivity(showProfile);
-    }
-
     @Override
     protected void onStart() {
         Log.e(TAG, "onStart >>");
@@ -119,6 +93,54 @@ public class AllProductsActivity extends Activity {
         {
             finish();
         }
+    }
+
+    private void getAllDares() {
+        mDaresList.clear();
+        mDaresAdapter = new DaresAdapter(mDaresList);
+        mDaresView.setAdapter(mDaresAdapter);
+
+        getDaresFromDB();
+    }
+
+    // onClicks
+    public void onViewYourProfileClick(View v) {
+        Log.e(TAG, "onViewYourProfileClick >>");
+
+        Intent showProfile = new Intent(this, UserProfileActivity.class);
+
+        startActivity(showProfile);
+    }
+
+    public void onFilterClick(View v) {
+        Log.e(TAG, "onFilterCLick >>" );
+        ArrayList<Dare> filteredDaresArray = new ArrayList<>();
+        int minProfit = 0;
+        String selectedName = (String)mspnNames.getSelectedItem();
+        boolean shouldFilterByName = !selectedName.contentEquals(SPINNER_UNFILTERED_OPTION);
+        boolean shouldFilterByProfit = !metMinProfit.getText().toString().isEmpty();
+
+        // Reset for re-filtering
+        mDaresList.clear();
+        mDaresList.addAll(mTempDareArray);
+
+        if(shouldFilterByProfit) {
+            minProfit = Integer.parseInt(metMinProfit.getText().toString());
+        }
+
+        // Filter
+        if(shouldFilterByName || shouldFilterByProfit) {
+            for(Dare dare: mDaresList) {
+                if(dare.getProfit() >= minProfit && (!shouldFilterByName || selectedName.contentEquals(dare.getCreaterName()))) {
+                    filteredDaresArray.add(dare);
+                }
+            }
+        }
+
+        mDaresList.clear();
+        mDaresList.addAll(filteredDaresArray);
+        mDaresView.getAdapter().notifyDataSetChanged();
+        Log.e(TAG, "onFilterCLick <<" );
     }
 
     private void getDaresFromDB() {
@@ -144,6 +166,7 @@ public class AllProductsActivity extends Activity {
                     mNameSet.add(dare.getCreaterName());
                 }
 
+                mTempDareArray.addAll(mDaresList);
                 mDaresView.getAdapter().notifyDataSetChanged();
                 mNamesArray.addAll(mNameSet);
                 mspnNames.setAdapter(mNamesAdapter);
