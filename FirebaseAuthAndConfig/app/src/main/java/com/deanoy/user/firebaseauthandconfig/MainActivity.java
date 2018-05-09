@@ -324,7 +324,10 @@ public class MainActivity extends Activity {
         Intent i = new Intent(getApplicationContext(), AllProductsActivity.class);
 
         startActivity(i);
-        finish();
+        if(mAuth.getCurrentUser() != null) {
+            finish();
+        }
+
     }
 
     private void startDisplaySignUpScreen()

@@ -92,6 +92,18 @@ public class UserProfileActivity extends Activity {
         Log.e(TAG, "onCreate <<");
     }
 
+    @Override
+    public void onBackPressed() {
+        Log.e(TAG, "onBack >>");
+        super.onBackPressed();
+
+        mAuth.signOut();
+        LoginManager.getInstance().logOut();
+        finish();
+
+        Log.e(TAG, "onBack <<");
+    }
+
     //TODO: This is a temp function for creating the dummy dares. Remove before finishing assignment
     /*
     private void tempLoadToDatabase() {
@@ -198,6 +210,8 @@ public class UserProfileActivity extends Activity {
         Log.e(TAG, "onSignoutClick >>");
 
         signOut();
+        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(i);
         finish();
 
         Log.e(TAG, "onSignoutClick <<");

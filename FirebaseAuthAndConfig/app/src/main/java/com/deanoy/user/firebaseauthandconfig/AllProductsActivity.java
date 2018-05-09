@@ -26,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -93,6 +94,16 @@ public class AllProductsActivity extends Activity {
         {
             finish();
         }
+        Log.e(TAG, "onStart <<");
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.e(TAG, "onBack >>");
+        //finishAndRemoveTask();
+
+        super.onBackPressed();
+        Log.e(TAG, "onBack <<");
     }
 
     private void getAllDares() {
@@ -141,6 +152,33 @@ public class AllProductsActivity extends Activity {
         mDaresList.addAll(filteredDaresArray);
         mDaresView.getAdapter().notifyDataSetChanged();
         Log.e(TAG, "onFilterCLick <<" );
+    }
+
+    public void onProfitSortClick(View v) {
+        mDaresList.sort(new Comparator<Dare>() {
+            @Override
+            public int compare(Dare dare, Dare t1) {
+                double result = dare.getProfit() - t1.getProfit();
+                if(result > 0) {
+                    return -1;
+                } else if (result < 0) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+        mDaresView.getAdapter().notifyDataSetChanged();
+    }
+
+    public void onDescriptionSortClick(View v) {
+        mDaresList.sort(new Comparator<Dare>() {
+            @Override
+            public int compare(Dare dare, Dare t1) {
+                return t1.getDescription().compareTo(dare.getDescription());
+            }
+        });
+        mDaresView.getAdapter().notifyDataSetChanged();
     }
 
     private void getDaresFromDB() {

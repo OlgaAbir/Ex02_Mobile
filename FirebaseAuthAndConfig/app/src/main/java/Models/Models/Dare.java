@@ -28,13 +28,10 @@ public class Dare implements Parcelable {
     private String mDescription;
     private ArrayList<String> mAttemptingUserID;
     private float mBuyInCost; // The amount of money used to buy in to attempt the dare
-    private int mHoursToFinish;
 
     //Dare progress
     private String mDescriptionImgURL; // The firebase storage url of the image that describes the dare
     private String mCompletionImgURL; // The firebase storage url of the image that is used as evidence of completion
-    private Date mStartDate; // The date the dare was accepted
-    private Date mEndDate; // The date the dare was succeeded
     private DareState mDareState = DareState.Available;
 
     protected Dare(Parcel in) {
@@ -48,11 +45,6 @@ public class Dare implements Parcelable {
         mDescriptionImgURL = in.readString();
         mCompletionImgURL = in.readString();
         mBuyInCost = in.readFloat();
-        mHoursToFinish = in.readInt();
-        long tempDate = in.readLong();
-        mStartDate = tempDate == -1 ? null : new Date(tempDate);
-        tempDate = in.readLong();
-        mEndDate = tempDate == -1 ? null : new Date(tempDate);
         mDareState = (DareState)in.readSerializable();
         //mDareState = DareState.Available TODO: remove this before handing assignment
     }
@@ -66,11 +58,8 @@ public class Dare implements Parcelable {
         this.mDescription = description;
         this.mAttemptingUserID = null;
         this.mBuyInCost = buyInCost;
-        this.mHoursToFinish = hoursToFinish;
         this.mDescriptionImgURL = descriptionImgURL;
         this.mCompletionImgURL = null;
-        this.mStartDate = null;
-        this.mEndDate = null;
         this.mDareState = DareState.Available;
     }
 
@@ -86,9 +75,6 @@ public class Dare implements Parcelable {
         dest.writeString(mDescriptionImgURL);
         dest.writeString(mCompletionImgURL);
         dest.writeFloat(mBuyInCost);
-        dest.writeInt(mHoursToFinish);
-        dest.writeLong(mStartDate != null ? mStartDate.getTime() : -1);
-        dest.writeLong(mEndDate != null ? mEndDate.getTime() : -1);
         dest.writeSerializable(mDareState);
     }
 
@@ -123,8 +109,6 @@ public class Dare implements Parcelable {
                 ", mBuyInCost=" + mBuyInCost +
                 ", mDescriptionImgURL='" + mDescriptionImgURL + '\'' +
                 ", mCompletionImgURL='" + mCompletionImgURL + '\'' +
-                ", mStartDate=" + mStartDate +
-                ", mEndDate=" + mEndDate +
                 ", mDareState=" + mDareState +
                 '}';
     }
@@ -163,22 +147,6 @@ public class Dare implements Parcelable {
 
     public float getProfit() {
         return 2 * mBuyInCost;
-    }
-
-    public Date getStartDate() {
-        return mStartDate;
-    }
-
-    public void setStartDate(Date mStartDate) {
-        this.mStartDate = mStartDate;
-    }
-
-    public Date getEndDate() {
-        return mEndDate;
-    }
-
-    public void setEndDate(Date mEndDate) {
-        this.mEndDate = mEndDate;
     }
 
     public DareState getDareState() {
@@ -227,14 +195,6 @@ public class Dare implements Parcelable {
 
     public void setAttemptingUserID(ArrayList<String> mAttemptingUserID) {
         this.mAttemptingUserID = mAttemptingUserID;
-    }
-
-    public int getHoursToFinish() {
-        return mHoursToFinish;
-    }
-
-    public void setmHoursToFinish(int mHoursToFinish) {
-        this.mHoursToFinish = mHoursToFinish;
     }
 
     public String getDareId() {

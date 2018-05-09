@@ -65,12 +65,13 @@
         app:layout_constraintTop_toBottomOf="@+id/btnViewYourProfile" />
 
     <Button
-        android:id="@+id/btnDateSort"
+        android:id="@+id/btnDescriptionSort"
         android:layout_width="166dp"
         android:layout_height="53dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:text="Sort by date (desc)"
+        android:onClick="onDescriptionSortClick"
+        android:text="Sort by description (desc)"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spnUserNames" />
 
@@ -80,6 +81,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
+        android:onClick="onProfitSortClick"
         android:text="Sort by profit (desc)"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spnUserNames" />
