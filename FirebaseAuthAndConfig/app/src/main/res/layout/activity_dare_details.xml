@@ -130,11 +130,13 @@
                 android:id="@+id/btnSavePhoto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
                 android:background="@color/cardview_light_background"
                 android:onClick="onSavePhotoClick"
                 android:text="Save photo"
-                tools:layout_editor_absoluteX="116dp"
-                tools:layout_editor_absoluteY="130dp" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btnUploadPhoto" />
 
         </android.support.constraint.ConstraintLayout>
 
