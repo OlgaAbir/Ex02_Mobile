@@ -35,6 +35,8 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.util.Arrays;
 
+import Models.UserDetails;
+
 public class MainActivity extends Activity {
     private static int RC_SIGN_IN = 1;
     private static String TAG = "MainActivity";

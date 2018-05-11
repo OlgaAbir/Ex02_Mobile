@@ -34,6 +34,7 @@ import java.util.TreeSet;
 
 import Models.Dare;
 import Models.DaresAdapter;
+import Models.UserDetails;
 
 import static java.lang.Thread.sleep;
 
@@ -82,6 +83,7 @@ public class AllProductsActivity extends Activity {
         mspnNames.setAdapter(mNamesAdapter);
 
         getAllDares();
+        UserDetails.getDaresFromDB();
         Log.e(TAG, "onCreate <<");
     }
 
