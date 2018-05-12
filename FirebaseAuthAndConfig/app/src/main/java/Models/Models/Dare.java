@@ -1,8 +1,10 @@
 package Models;
 
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,12 +29,11 @@ public class Dare implements Parcelable {
     private String mDareName;
     private String mDescription;
     private ArrayList<String> mAttemptingUserID;
-    private float mBuyInCost; // The amount of money used to buy in to attempt the dare
+    private ArrayList<String> mCompletedUserIds;
+    private int mBuyInCost; // The amount of money used to buy in to attempt the dare
 
     //Dare progress
-    private String mDescriptionImgURL; // The firebase storage url of the image that describes the dare
-    private String mCompletionImgURL; // The firebase storage url of the image that is used as evidence of completion
-    private DareState mDareState = DareState.Available;
+    private Bitmap mDescriptionImgBitmap; // The firebase storage url of the image that describes the dare
 
     protected Dare(Parcel in) {
         mDareId = in.readString();
@@ -41,26 +42,24 @@ public class Dare implements Parcelable {
         mCreaterName = in.readString();
         mDareName = in.readString();
         mDescription = in.readString();
-        mAttemptingUserID = in.readArrayList(getClass().getClassLoader());
-        mDescriptionImgURL = in.readString();
-        mCompletionImgURL = in.readString();
-        mBuyInCost = in.readFloat();
-        mDareState = (DareState)in.readSerializable();
-        //mDareState = DareState.Available TODO: remove this before handing assignment
+        mBuyInCost = in.readInt();
+
+        mAttemptingUserID = new ArrayList<>();
+        in.readStringList(mAttemptingUserID);
+        mCompletedUserIds = new ArrayList<>();
+        in.readStringList(mCompletedUserIds);
     }
 
     //TODO: remove this before handing assignment
-    public Dare(String createrID, String createrEmail, String createrName, String dareName, String description, float buyInCost, int hoursToFinish, String descriptionImgURL) {
+    public Dare(String createrID, String createrEmail, String createrName, String dareName, String description, int buyInCost) {
         this.mCreaterID = createrID;
         this.mCreaterEmail = createrEmail;
         this.mCreaterName = createrName;
         this.mDareName = dareName;
         this.mDescription = description;
         this.mAttemptingUserID = null;
+        this.mCompletedUserIds = null;
         this.mBuyInCost = buyInCost;
-        this.mDescriptionImgURL = descriptionImgURL;
-        this.mCompletionImgURL = null;
-        this.mDareState = DareState.Available;
     }
 
     @Override
@@ -71,11 +70,9 @@ public class Dare implements Parcelable {
         dest.writeString(mCreaterName);
         dest.writeString(mDareName);
         dest.writeString(mDescription);
+        dest.writeInt(mBuyInCost);
         dest.writeStringList(mAttemptingUserID);
-        dest.writeString(mDescriptionImgURL);
-        dest.writeString(mCompletionImgURL);
-        dest.writeFloat(mBuyInCost);
-        dest.writeSerializable(mDareState);
+        dest.writeStringList(mCompletedUserIds);
     }
 
     @Override
@@ -107,9 +104,6 @@ public class Dare implements Parcelable {
                 ", mDescription='" + mDescription + '\'' +
                 ", mAttemptingUserID=" + mAttemptingUserID +
                 ", mBuyInCost=" + mBuyInCost +
-                ", mDescriptionImgURL='" + mDescriptionImgURL + '\'' +
-                ", mCompletionImgURL='" + mCompletionImgURL + '\'' +
-                ", mDareState=" + mDareState +
                 '}';
     }
 
@@ -121,40 +115,16 @@ public class Dare implements Parcelable {
         this.mCreaterID = mCreaterID;
     }
 
-    public String getDescriptionImgURL() {
-        return mDescriptionImgURL;
-    }
-
-    public void setDescriptionImgURL(String mDescriptionImgURL) {
-        this.mDescriptionImgURL = mDescriptionImgURL;
-    }
-
-    public String getCompletionImgURL() {
-        return mCompletionImgURL;
-    }
-
-    public void setCompletionImgURL(String mCompletionImgURL) {
-        this.mCompletionImgURL = mCompletionImgURL;
-    }
-
-    public float getBuyInCost() {
+    public int getBuyInCost() {
         return mBuyInCost;
     }
 
-    public void setBuyInCost(float mBuyInCost) {
+    public void setBuyInCost(int mBuyInCost) {
         this.mBuyInCost = mBuyInCost;
     }
 
-    public float getProfit() {
+    public int getProfit() {
         return 2 * mBuyInCost;
-    }
-
-    public DareState getDareState() {
-        return mDareState;
-    }
-
-    public void setDareState(DareState mDareState) {
-        this.mDareState = mDareState;
     }
 
     public String getCreaterEmail() {
@@ -197,11 +167,27 @@ public class Dare implements Parcelable {
         this.mAttemptingUserID = mAttemptingUserID;
     }
 
+    public void setCompletedUserIds(ArrayList<String> mCompletedUserIds) {
+        this.mCompletedUserIds = mCompletedUserIds;
+    }
+
+    public ArrayList<String> getCompletedUserIds() {
+        return mCompletedUserIds;
+    }
+
     public String getDareId() {
         return mDareId;
     }
 
     public void setDareId(String mDareId) {
         this.mDareId = mDareId;
+    }
+
+    public Bitmap getDescriptionImgBitmap() {
+        return mDescriptionImgBitmap;
+    }
+
+    public void setDescriptionImgBitmap(Bitmap descriptionImgBitmap) {
+        this.mDescriptionImgBitmap = descriptionImgBitmap;
     }
 }

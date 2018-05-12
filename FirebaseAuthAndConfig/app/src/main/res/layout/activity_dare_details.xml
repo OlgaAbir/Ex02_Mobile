@@ -50,35 +50,13 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvDetailsDareName" />
 
             <Button
-                android:id="@+id/btnBuy"
+                android:id="@+id/btnAction"
                 android:layout_width="wrap_content"
                 android:layout_height="52dp"
                 android:layout_marginTop="144dp"
                 android:background="@android:color/holo_green_light"
-                android:onClick="onBuyClick"
+                android:onClick="onActionClick"
                 android:text="Buy"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/btnBought"
-                android:layout_width="wrap_content"
-                android:layout_height="52dp"
-                android:layout_marginTop="144dp"
-                android:background="@android:color/holo_red_dark"
-                android:onClick="onBoughtClick"
-                android:text="Bought"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/btnUploadPhoto"
-                android:layout_width="wrap_content"
-                android:layout_height="52dp"
-                android:layout_marginTop="144dp"
-                android:background="@android:color/background_light"
-                android:onClick="onAddImageClick"
-                android:text="Upload photo"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -125,18 +103,6 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvDetailsPublisher"
                 app:layout_constraintVertical_bias="0.0" />
-
-            <Button
-                android:id="@+id/btnSavePhoto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:background="@color/cardview_light_background"
-                android:onClick="onSavePhotoClick"
-                android:text="Save photo"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btnUploadPhoto" />
 
         </android.support.constraint.ConstraintLayout>
 
