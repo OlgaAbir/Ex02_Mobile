@@ -62,6 +62,7 @@ public class DareDetailsActivity extends Activity {
     private DatabaseReference mDareDatabaseRef;
     private StorageReference mStorageReference;
     private FirebaseAuth mAuth;
+    private Uri contentURI;
 
 
 
@@ -227,7 +228,19 @@ public class DareDetailsActivity extends Activity {
             handlePurchase();
         } else { // User is uploading completion image
             handleUploadCompletionImage();
+            sendPictureToEmail();
         }
+    }
+
+    private void sendPictureToEmail() {
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, mSelectedDare.getCreaterEmail());
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Completed mission");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "user" + mLoggedInUser.getDisplayName() + "completed the mission");
+        emailIntent.setType("image/jpeg");
+        emailIntent.putExtra(Intent.EXTRA_STREAM, contentURI);
+        startActivity(Intent.createChooser(emailIntent,"Share image using"));
+        finish();
     }
 
     private void handleUploadCompletionImage() {
@@ -264,7 +277,7 @@ public class DareDetailsActivity extends Activity {
         Log.e(TAG, "onActivityResult <<");
         if (resultCode == RESULT_OK && requestCode == GALLERY && data != null) {
             try {
-                Uri contentURI = data.getData();
+                contentURI = data.getData();
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
                 uploadImage(bitmap);
                 Log.e(TAG, "onActivityResult << Selecting photo");
