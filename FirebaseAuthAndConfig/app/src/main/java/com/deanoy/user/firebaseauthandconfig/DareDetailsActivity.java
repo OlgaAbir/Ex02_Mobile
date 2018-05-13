@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,6 +39,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Delayed;
 
 import Models.Dare;
 import Models.Review;
@@ -58,9 +61,18 @@ public class DareDetailsActivity extends Activity {
     private DatabaseReference mUserDetailsDatabaseRef;
     private DatabaseReference mDareDatabaseRef;
     private StorageReference mStorageReference;
+    private FirebaseAuth mAuth;
+
+
 
     //TODO: Idan do like this
     // UI
+    private TextView mtvDetailsDareName;
+    private TextView mtvDetailsPublisher;
+    private TextView mtvDetailsPrice;
+    private TextView mtvDetailsProfit;
+    private TextView mtvDetailsDescription;
+
     private Button mbtnActionButton;
     private Button mbtnAddReview;
 
@@ -75,20 +87,10 @@ public class DareDetailsActivity extends Activity {
         mReviewsDatabaseRef = FirebaseDatabase.getInstance().getReference("Reviews").child(mSelectedDare.getDareId());
         mUserDetailsDatabaseRef = FirebaseDatabase.getInstance().getReference("UserDetails").child(mLoggedInUser.getUid());
         mDareDatabaseRef = FirebaseDatabase.getInstance().getReference("Dares").child(mSelectedDare.getDareId());
+        mAuth = FirebaseAuth.getInstance();
 
         // Set UI
         setUI();
-
-        ((TextView) findViewById(R.id.tvDetailsDareName)).setText("Name: " + mSelectedDare.getDareName());
-        ((TextView) findViewById(R.id.tvDetailsPublisher)).setText("Publisher: " + mSelectedDare.getCreaterName());
-        ((TextView) findViewById(R.id.tvDetailsPrice)).setText("Price: " + mSelectedDare.getBuyInCost());
-        ((TextView) findViewById(R.id.tvDetailsProfit)).setText("Profit: " + mSelectedDare.getProfit());
-        ((TextView) findViewById(R.id.tvDetailsDescription)).setText("I dare you to: " + mSelectedDare.getDescription());
-
-        mReviewsView = findViewById(R.id.dare_reviews);
-        mReviewsView .setHasFixedSize(true);
-        mReviewsView .setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        mReviewsView .setItemAnimator(new DefaultItemAnimator());
 
         getReviews();
 
@@ -96,8 +98,15 @@ public class DareDetailsActivity extends Activity {
     }
 
     private void setUI() {
+
         mbtnActionButton = findViewById(R.id.btnAction);
         mbtnAddReview = findViewById(R.id.btnAddReview);
+        mReviewsView = findViewById(R.id.dare_reviews);
+        mtvDetailsDareName = (TextView) findViewById(R.id.tvDetailsDareName);
+        mtvDetailsPublisher = (TextView) findViewById(R.id.tvDetailsPublisher);
+        mtvDetailsPrice = (TextView) findViewById(R.id.tvDetailsPrice);
+        mtvDetailsProfit = (TextView) findViewById(R.id.tvDetailsProfit);
+        mtvDetailsDescription = (TextView) findViewById(R.id.tvDetailsDescription);
 
         if(mLoggedInUser.getUid().contentEquals(mSelectedDare.getCreaterID()) || mSelectedDare.getCompletedUserIds().contains(mLoggedInUser.getUid())) {
             Log.e(TAG, "setUI << Don't show action button" );
@@ -107,9 +116,12 @@ public class DareDetailsActivity extends Activity {
             if (!mSelectedDare.getAttemptingUserID().contains(mLoggedInUser.getUid())){ // User is buying dare
                 Log.e(TAG, "setUI << User still did not purchase dare" );
                 btnText = "Buy";
+                mbtnAddReview.setVisibility(View.INVISIBLE);
+
             } else { // User is uploading completion image
                 Log.e(TAG, "setUI << User already purchased dare" );
                 btnText = "Upload Picture";
+                mbtnAddReview.setVisibility(View.INVISIBLE);
             }
 
             mbtnActionButton.setText(btnText);
@@ -118,6 +130,16 @@ public class DareDetailsActivity extends Activity {
             mbtnAddReview.setVisibility(View.INVISIBLE);
             mbtnActionButton.setText("Buy");
         }
+
+        mtvDetailsDareName.setText("Name: " + mSelectedDare.getDareName());
+        mtvDetailsPublisher.setText("Publisher: " + mSelectedDare.getCreaterName());
+        mtvDetailsPrice.setText("Price: " + mSelectedDare.getBuyInCost());
+        mtvDetailsProfit.setText("Profit: " + mSelectedDare.getProfit());
+        mtvDetailsDescription.setText("I dare you to: " + mSelectedDare.getDescription());
+
+        mReviewsView .setHasFixedSize(true);
+        mReviewsView .setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        mReviewsView .setItemAnimator(new DefaultItemAnimator());
     }
 
     private void getUserDetails() {
@@ -188,9 +210,16 @@ public class DareDetailsActivity extends Activity {
     public void onActionClick(View v)
     {
         // TODO: IDAN implement please all that relevant to buy process :
-        // - the things that mentioned in the word file I sent in the group
-        // - if the user is anonymous it's time to force him to sign up/sign in to proceed with buying
-        // - the write review button should be invisible until the user buy's the dare. after he buy's make it visible/available
+        // Done - the things that mentioned in the word file I sent in the group
+        // Done - if the user is anonymous it's time to force him to sign up/sign in to proceed with buying
+        // Done - the write review button should be invisible until the user buy's the dare. after he buy's make it visible/available
+        if(mLoggedInUser.isAnonymous()){
+            Toast.makeText(this, "You are not allowed to buy this dare ,please sign in/sign up.", Toast.LENGTH_LONG).show();
+            signOut();
+            Intent i = new Intent(this ,MainActivity.class);
+            startActivity(i);
+        }
+
         if(mUserDetails == null) {
             Toast.makeText(this, "Service not available yet. Please try again soon", Toast.LENGTH_SHORT).show();
             return; // Not ready yet
@@ -211,6 +240,7 @@ public class DareDetailsActivity extends Activity {
     private void handlePurchase() {
         int balance = mUserDetails.getBalance();
 
+        Log.e(TAG,mUserDetails.toString());
         if(balance >= mSelectedDare.getBuyInCost()) {
             mUserDetails.setBalance(balance - mSelectedDare.getBuyInCost());
             mUserDetails.getPurchasedDareIds().add(mSelectedDare.getDareId()); // Add dare to purchased
@@ -270,6 +300,7 @@ public class DareDetailsActivity extends Activity {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 dareCompleted();
                 Log.e(TAG, "Successfully uploaded image to storage.");
+                mbtnAddReview.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -293,5 +324,15 @@ public class DareDetailsActivity extends Activity {
         mSelectedDare.getCompletedUserIds().add(mLoggedInUser.getUid()); // Add user to completed user ids list
         setUI();
         updateDB();
+    }
+
+    private void signOut() {
+        Log.e(TAG, "signOut >>");
+
+        mAuth.signOut();
+        // Log out from facebook
+        LoginManager.getInstance().logOut();
+
+        Log.e(TAG, "signOut <<");
     }
 }

@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import Models.Dare;
+import Models.UserDetails;
 
 public class UserProfileActivity extends Activity {
 
@@ -41,9 +42,12 @@ public class UserProfileActivity extends Activity {
     private FirebaseUser mLoggedInUser;
     private TextView mtvUserName;
     private TextView mtvUserEmail;
+    private TextView mtvBalance;
     private ImageView mivUserProfilePicture;
     private Button mbtnChangePassword;
     private Button mbtnVerifyEmail;
+    private UserDetails mUserDetails;
+    private DatabaseReference mUserDetailsDatabaseRef;
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
@@ -85,6 +89,9 @@ public class UserProfileActivity extends Activity {
         mtvUserEmail = findViewById(R.id.tvEmailAddressAppHome);
         mbtnChangePassword = findViewById(R.id.btnChangePasswordAppHome);
         mbtnVerifyEmail = findViewById(R.id.btnVerifyEmailAppHome);
+        mtvBalance = findViewById(R.id.tvBalance);
+        getUserDetails();
+        mUserDetailsDatabaseRef = FirebaseDatabase.getInstance().getReference("UserDetails").child(mLoggedInUser.getUid());
         setUI();
         //tempLoadToDatabase(); //TODO: This is a temp function for creating the dummy dares. Remove before finishing assignment
         //getDaresFromDB();
@@ -92,7 +99,7 @@ public class UserProfileActivity extends Activity {
         Log.e(TAG, "onCreate <<");
     }
 
-    @Override
+   /* @Override
     public void onBackPressed() {
         Log.e(TAG, "onBack >>");
         super.onBackPressed();
@@ -102,7 +109,7 @@ public class UserProfileActivity extends Activity {
         finish();
 
         Log.e(TAG, "onBack <<");
-    }
+    }*/
 
     //TODO: This is a temp function for creating the dummy dares. Remove before finishing assignment
     /*
@@ -138,6 +145,7 @@ public class UserProfileActivity extends Activity {
             mbtnChangePassword.setVisibility(View.INVISIBLE);
             mbtnVerifyEmail.setVisibility(View.INVISIBLE);
             mivUserProfilePicture.setVisibility(View.VISIBLE);
+
         } else {
             mbtnChangePassword.setVisibility(View.VISIBLE);
             mbtnVerifyEmail.setVisibility(View.VISIBLE);
@@ -203,6 +211,7 @@ public class UserProfileActivity extends Activity {
             mbtnVerifyEmail.setVisibility(View.INVISIBLE);
             mbtnChangePassword.setVisibility(View.INVISIBLE);
             mtvUserEmail.setVisibility(View.INVISIBLE);
+            mtvBalance.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -244,6 +253,32 @@ public class UserProfileActivity extends Activity {
 
     private void displayMessage(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    private void getUserDetails() {
+        mLoggedInUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userID = mLoggedInUser.getUid();
+        FirebaseDatabase.getInstance().getReference("UserDetails").child(userID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.e(TAG, "onDataChange() >>" );
+                mUserDetails = dataSnapshot.getValue(UserDetails.class);
+                if(mUserDetails == null) {
+                    mUserDetails = new UserDetails();
+                }
+
+                if(!mLoggedInUser.isAnonymous())
+                    mtvBalance.setText("Balance: " + mUserDetails.getBalance());
+
+
+                Log.e(TAG, "onDataChange() <<" );
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "Failed to read value.", databaseError.toException());
+            }
+        });
     }
 
 }
