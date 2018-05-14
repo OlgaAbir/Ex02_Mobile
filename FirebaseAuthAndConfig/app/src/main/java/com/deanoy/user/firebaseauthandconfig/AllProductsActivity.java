@@ -1,52 +1,28 @@
 package com.deanoy.user.firebaseauthandconfig;
 
-import com.deanoy.user.firebaseauthandconfig.R;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
-
-import com.facebook.LoginStatusCallback;
-import com.facebook.login.LoginManager;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.TreeSet;
-
 import Models.Dare;
 import Models.DaresAdapter;
-import Models.UserDetails;
-
-import static java.lang.Thread.sleep;
 
 public class AllProductsActivity extends Activity {
     private static String TAG = "AllProductsActivity";
@@ -230,70 +206,5 @@ public class AllProductsActivity extends Activity {
             }
         });
         Log.e(TAG, "getDaresFromDB() <<" );
-        //TEMP todo: remove
-        if(mFirstTime) {
-            mFirstTime = true;
-          //  onAddImageClick();
-        }
-    }
-
-    private boolean mFirstTime = true;
-
-    //TEMP todo: remove
-    public void onAddImageClick(){
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-        startActivityForResult(galleryIntent, 1);
-    }
-
-    //TEMP todo: remove
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.e(TAG, "onActivityResult <<");
-        if (resultCode == RESULT_OK && requestCode == 1 && data != null) {
-            try {
-                Uri contentURI = data.getData();
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-                assignImages(bitmap);
-                Log.e(TAG, "onActivityResult << Selecting photo");
-            } catch (Exception e) {
-                Log.e(TAG, "onActivityResult << Error! Unable to retrieve photo");
-                e.printStackTrace();
-            }
-        }
-
-        Log.e(TAG, "onActivityResult >>");
-    }
-    //TEMP TODO: remove
-    private void assignImages(Bitmap bitmap) {
-        //TEMP: add description pictures to the dares TODO: remove before assigning
-        Log.e(TAG, "Uploading image...");
-        //StorageReference imageRef = mStorageRef.child(userId).child(Integer.toString(imageNumber));
-        StorageReference mStorageReference;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-
-        for(Dare dare: mDaresList) {
-            if(dare.getCreaterName().contentEquals("Dean")) {
-                mStorageReference = FirebaseStorage.getInstance().getReference("Dares").child(dare.getDareId()).child("DescriptionImage");
-                UploadTask uploadTask = mStorageReference.putBytes(data);
-                uploadTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        Toast.makeText(AllProductsActivity.this, "Failed uploading image.", Toast.LENGTH_SHORT).show();
-                        Log.e(TAG, "Failed uploading to storage.");
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Log.e(TAG, "Successfully uploaded image to storage.");
-                    }
-                });
-            }
-        }
     }
 }

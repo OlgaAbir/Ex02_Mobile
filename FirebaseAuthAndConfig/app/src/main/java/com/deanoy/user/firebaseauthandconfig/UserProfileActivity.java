@@ -280,5 +280,4 @@ public class UserProfileActivity extends Activity {
             }
         });
     }
-
 }

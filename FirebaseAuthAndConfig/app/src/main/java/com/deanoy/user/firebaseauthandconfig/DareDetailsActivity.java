@@ -64,8 +64,6 @@ public class DareDetailsActivity extends Activity {
     private FirebaseAuth mAuth;
     private Uri contentURI;
 
-
-
     //TODO: Idan do like this
     // UI
     private TextView mtvDetailsDareName;
@@ -103,11 +101,11 @@ public class DareDetailsActivity extends Activity {
         mbtnActionButton = findViewById(R.id.btnAction);
         mbtnAddReview = findViewById(R.id.btnAddReview);
         mReviewsView = findViewById(R.id.dare_reviews);
-        mtvDetailsDareName = (TextView) findViewById(R.id.tvDetailsDareName);
-        mtvDetailsPublisher = (TextView) findViewById(R.id.tvDetailsPublisher);
-        mtvDetailsPrice = (TextView) findViewById(R.id.tvDetailsPrice);
-        mtvDetailsProfit = (TextView) findViewById(R.id.tvDetailsProfit);
-        mtvDetailsDescription = (TextView) findViewById(R.id.tvDetailsDescription);
+        mtvDetailsDareName = findViewById(R.id.tvDetailsDareName);
+        mtvDetailsPublisher = findViewById(R.id.tvDetailsPublisher);
+        mtvDetailsPrice = findViewById(R.id.tvDetailsPrice);
+        mtvDetailsProfit = findViewById(R.id.tvDetailsProfit);
+        mtvDetailsDescription = findViewById(R.id.tvDetailsDescription);
 
         if(mLoggedInUser.getUid().contentEquals(mSelectedDare.getCreaterID()) || mSelectedDare.getCompletedUserIds().contains(mLoggedInUser.getUid())) {
             Log.e(TAG, "setUI << Don't show action button" );
@@ -210,10 +208,6 @@ public class DareDetailsActivity extends Activity {
 
     public void onActionClick(View v)
     {
-        // TODO: IDAN implement please all that relevant to buy process :
-        // Done - the things that mentioned in the word file I sent in the group
-        // Done - if the user is anonymous it's time to force him to sign up/sign in to proceed with buying
-        // Done - the write review button should be invisible until the user buy's the dare. after he buy's make it visible/available
         if(mLoggedInUser.isAnonymous()){
             Toast.makeText(this, "You are not allowed to buy this dare ,please sign in/sign up.", Toast.LENGTH_LONG).show();
             signOut();

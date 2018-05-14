@@ -151,8 +151,6 @@ public class MainActivity extends Activity {
                             Toast.makeText(MainActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
-
-                        // ...
                     }
                 });
         Log.e(TAG, "onSignInClick <<");
