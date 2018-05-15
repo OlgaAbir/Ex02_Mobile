@@ -109,7 +109,7 @@ public class DareDetailsActivity extends Activity {
     private void setUI() {
         if(mLoggedInUser.getUid().contentEquals(mSelectedDare.getCreaterID())) {
             Log.e(TAG, "setUI << User is the creator. Don't show action button");
-            mbtnUploadPicture.setVisibility(View.INVISIBLE); // User is the creater or user already completed this dare. No action button needed
+           // mbtnUploadPicture.setVisibility(View.INVISIBLE); // User is the creater or user already completed this dare. No action button needed
             mbtnActionButton.setVisibility(View.INVISIBLE);
             mbtnAddReview.setVisibility(View.INVISIBLE);
         } else if (!mLoggedInUser.isAnonymous()){ // Not anonymous
@@ -118,24 +118,25 @@ public class DareDetailsActivity extends Activity {
                 Log.e(TAG, "setUI << User still did not purchase dare" );
                 btnText = "Buy";
                 mbtnActionButton.setVisibility(View.VISIBLE);
-                mbtnUploadPicture.setVisibility(View.INVISIBLE);
+                //mbtnUploadPicture.setVisibility(View.INVISIBLE);
                 mbtnAddReview.setVisibility(View.INVISIBLE);
             } else  if (!mIsPicSelected && mSelectedDare.getAttemptingUserID().contains(mLoggedInUser.getUid())) { // User selected a picture
                 Log.e(TAG, "setUI << User already purchased dare and needs to select a picture" );
                 btnText = "Select Picture";
-                mbtnUploadPicture.setVisibility(View.INVISIBLE);
+                //mbtnUploadPicture.setVisibility(View.INVISIBLE);
                 mbtnAddReview.setVisibility(View.INVISIBLE);
             } else if (mIsPicSelected) { // User has selected a picture
                 Log.e(TAG, "setUI << User already purchased dare and needs to submit picture" );
-                btnText = "Submit Picture";
-                mbtnUploadPicture.setVisibility(View.VISIBLE);
+                btnText = "Select Picture";
+                //mbtnUploadPicture.setVisibility(View.VISIBLE);
+                mbtnActionButton.setVisibility(View.VISIBLE);
                 mivCompletion.setImageBitmap(mCompletionImageBitmap);
-                mbtnAddReview.setVisibility(View.INVISIBLE);
+                mbtnAddReview.setVisibility(View.VISIBLE);
             }
 
             if (mSelectedDare.getCompletedUserIds().contains(mLoggedInUser.getUid())){ // Already completed dare
                 Log.e(TAG, "setUI << User already completed the dare" );
-                btnText = "Add Review";
+                btnText = "Select Picture";
                 mbtnAddReview.setVisibility(View.VISIBLE);
                 mbtnUploadPicture.setVisibility(View.VISIBLE);
             }
@@ -320,7 +321,7 @@ public class DareDetailsActivity extends Activity {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 dareCompleted();
                 Log.e(TAG, "Successfully uploaded image to storage.");
-                mbtnAddReview.setVisibility(View.VISIBLE);
+                Toast.makeText(DareDetailsActivity.this, "Successfully uploading image.", Toast.LENGTH_SHORT).show();
             }
         });
     }
