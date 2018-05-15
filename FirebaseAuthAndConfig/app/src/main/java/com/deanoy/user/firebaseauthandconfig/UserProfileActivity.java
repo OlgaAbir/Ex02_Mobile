@@ -97,44 +97,6 @@ public class UserProfileActivity extends Activity {
         Log.e(TAG, "onCreate <<");
     }
 
-   /* @Override
-    public void onBackPressed() {
-        Log.e(TAG, "onBack >>");
-        super.onBackPressed();
-
-        mAuth.signOut();
-        LoginManager.getInstance().logOut();
-        finish();
-
-        Log.e(TAG, "onBack <<");
-    }*/
-
-    //TODO: This is a temp function for creating the dummy dares. Remove before finishing assignment
-    /*
-    private void tempLoadToDatabase() {
-        Dare dare;
-        //ArrayList<Dare> daresList = new ArrayList<Dare>();
-        DatabaseReference dareRef = FirebaseDatabase.getInstance().getReference("Dares");
-        String dbKey;
-
-        for (int i = 0; i < 100; i++) { // Create fake dares
-            if (i % 3 == 0) { // Olga
-                dare = new Dare("0Aq19XxCdla2b3ymOlDxI1baK283", "olgaabirhaim@gmail.com", "Olga",
-                        "Olga's game", "Bomb a national monument", (float) 50, 24, "description.img");
-            } else if (i % 3 == 1) { // Dean
-                dare = new Dare("YPmMm9PjTTXdxwSWGJCSL8JntXo1", "rustykopo@gmail.com", "Dean",
-                        "Dean's trial", "Execute a government official", (float) 2, 48, "description.img");
-            } else {
-                dare = new Dare("X4SkI6HiHVSUM8cXBcpU9zW3OXt1", "olga_94@live.ru", "Olga2",
-                        "No guts no glory", "Steal Idan's Mercedes", (float) 500, 8, "description.img");
-            }
-
-            dbKey = dareRef.push().getKey();
-            dareRef.child(dbKey).setValue(dare);
-        }
-    }
-    */
-
     private void setUI() {
         displayLoggedInUserProfile();
         // User signed in using facebook/google.

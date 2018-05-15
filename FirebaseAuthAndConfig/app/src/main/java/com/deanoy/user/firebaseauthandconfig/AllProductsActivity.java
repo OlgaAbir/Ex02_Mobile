@@ -85,15 +85,6 @@ public class AllProductsActivity extends Activity {
         Log.e(TAG, "onStart <<");
     }
 
-    @Override
-    public void onBackPressed() {
-        Log.e(TAG, "onBack >>");
-        //finishAndRemoveTask();
-
-        super.onBackPressed();
-        Log.e(TAG, "onBack <<");
-    }
-
     private void getAllDares() {
         mDaresList.clear();
         mDaresAdapter = new DaresAdapter(mDaresList);
@@ -116,7 +107,7 @@ public class AllProductsActivity extends Activity {
         ArrayList<Dare> filteredDaresArray = new ArrayList<>();
         int minProfit = 0;
         String selectedName = (String)mspnNames.getSelectedItem();
-        boolean shouldFilterByName = !selectedName.contentEquals(SPINNER_UNFILTERED_OPTION);
+        boolean shouldFilterByName = !selectedName.equals(SPINNER_UNFILTERED_OPTION);
         boolean shouldFilterByProfit = !metMinProfit.getText().toString().isEmpty();
 
         // Reset for re-filtering
@@ -128,11 +119,10 @@ public class AllProductsActivity extends Activity {
         }
 
         // Filter
-        if(shouldFilterByName || shouldFilterByProfit) {
-            for(Dare dare: mDaresList) {
-                if(dare.getProfit() >= minProfit && (!shouldFilterByName || selectedName.contentEquals(dare.getCreaterName()))) {
-                    filteredDaresArray.add(dare);
-                }
+        for(Dare dare: mDaresList) {
+            if((dare.getProfit() >= minProfit) && (!shouldFilterByName || selectedName.equals(dare.getCreaterName()))) {
+                filteredDaresArray.add(dare);
+                Log.e(TAG, "added to array" );
             }
         }
 
