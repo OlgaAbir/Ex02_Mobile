@@ -46,7 +46,6 @@ public class DaresAdapter extends RecyclerView.Adapter<DareViewHolder> {
         holder.getCreatorName().setText("Publisher: " + dare.getCreaterName());
         holder.getPrice().setText("Price: " + dare.getBuyInCost());
         holder.getProfit().setText("Profit: " + dare.getProfit());
-        //TODO: load image from database and show it in Dare image view
 
         Log.e(TAG,"onBindViewHolder() << "+ position);
     }

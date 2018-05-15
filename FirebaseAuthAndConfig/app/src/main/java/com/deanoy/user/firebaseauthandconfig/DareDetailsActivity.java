@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -33,13 +32,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Delayed;
 
 import Models.Dare;
 import Models.Review;
@@ -47,11 +42,12 @@ import Models.ReviewsAdapter;
 import Models.UserDetails;
 
 public class DareDetailsActivity extends Activity {
-
     private static final String TAG = "DareDetailsActivity";
     private static final String DARE_DATA = "dare";
     private static int GALLERY = 1;
 
+    private boolean mIsPicSelected = false;
+    private Bitmap mCompletionImageBitmap;
     private Dare mSelectedDare;
     private UserDetails mUserDetails;
     private RecyclerView mReviewsView;
@@ -64,16 +60,16 @@ public class DareDetailsActivity extends Activity {
     private FirebaseAuth mAuth;
     private Uri contentURI;
 
-    //TODO: Idan do like this
     // UI
     private TextView mtvDetailsDareName;
     private TextView mtvDetailsPublisher;
     private TextView mtvDetailsPrice;
     private TextView mtvDetailsProfit;
     private TextView mtvDetailsDescription;
-
+    private ImageView mivCompletion;
     private Button mbtnActionButton;
     private Button mbtnAddReview;
+    private Button mbtnUploadPicture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +84,7 @@ public class DareDetailsActivity extends Activity {
         mDareDatabaseRef = FirebaseDatabase.getInstance().getReference("Dares").child(mSelectedDare.getDareId());
         mAuth = FirebaseAuth.getInstance();
 
+        bindUI();
         // Set UI
         setUI();
 
@@ -96,31 +93,51 @@ public class DareDetailsActivity extends Activity {
         Log.e(TAG, "onCreate <<" );
     }
 
-    private void setUI() {
-
+    private void bindUI() {
         mbtnActionButton = findViewById(R.id.btnAction);
         mbtnAddReview = findViewById(R.id.btnAddReview);
+        mbtnUploadPicture = findViewById(R.id.btnUploadPicture);
         mReviewsView = findViewById(R.id.dare_reviews);
         mtvDetailsDareName = findViewById(R.id.tvDetailsDareName);
         mtvDetailsPublisher = findViewById(R.id.tvDetailsPublisher);
         mtvDetailsPrice = findViewById(R.id.tvDetailsPrice);
         mtvDetailsProfit = findViewById(R.id.tvDetailsProfit);
         mtvDetailsDescription = findViewById(R.id.tvDetailsDescription);
+        mivCompletion = findViewById(R.id.ivDetailsDareImage);
+    }
 
-        if(mLoggedInUser.getUid().contentEquals(mSelectedDare.getCreaterID()) || mSelectedDare.getCompletedUserIds().contains(mLoggedInUser.getUid())) {
-            Log.e(TAG, "setUI << Don't show action button" );
-            mbtnActionButton.setVisibility(View.INVISIBLE); // User is the creater or user already completed this dare. No action button needed
+    private void setUI() {
+        if(mLoggedInUser.getUid().contentEquals(mSelectedDare.getCreaterID())) {
+            Log.e(TAG, "setUI << User is the creator. Don't show action button");
+            mbtnUploadPicture.setVisibility(View.INVISIBLE); // User is the creater or user already completed this dare. No action button needed
+            mbtnActionButton.setVisibility(View.INVISIBLE);
+            mbtnAddReview.setVisibility(View.INVISIBLE);
         } else if (!mLoggedInUser.isAnonymous()){ // Not anonymous
-            String btnText;
-            if (!mSelectedDare.getAttemptingUserID().contains(mLoggedInUser.getUid())){ // User is buying dare
+            String btnText = "";
+            if (!mSelectedDare.getAttemptingUserID().contains(mLoggedInUser.getUid()) && !mSelectedDare.getCompletedUserIds().contains(mLoggedInUser.getUid())){ // User did not buy dare yet
                 Log.e(TAG, "setUI << User still did not purchase dare" );
                 btnText = "Buy";
+                mbtnActionButton.setVisibility(View.VISIBLE);
+                mbtnUploadPicture.setVisibility(View.INVISIBLE);
                 mbtnAddReview.setVisibility(View.INVISIBLE);
+            } else  if (!mIsPicSelected && mSelectedDare.getAttemptingUserID().contains(mLoggedInUser.getUid())) { // User selected a picture
+                Log.e(TAG, "setUI << User already purchased dare and needs to select a picture" );
+                btnText = "Select Picture";
+                mbtnUploadPicture.setVisibility(View.INVISIBLE);
+                mbtnAddReview.setVisibility(View.INVISIBLE);
+            } else if (mIsPicSelected) { // User has selected a picture
+                Log.e(TAG, "setUI << User already purchased dare and needs to submit picture" );
+                btnText = "Submit Picture";
+                mbtnUploadPicture.setVisibility(View.VISIBLE);
+                mivCompletion.setImageBitmap(mCompletionImageBitmap);
+                mbtnAddReview.setVisibility(View.INVISIBLE);
+            }
 
-            } else { // User is uploading completion image
-                Log.e(TAG, "setUI << User already purchased dare" );
-                btnText = "Upload Picture";
-                mbtnAddReview.setVisibility(View.INVISIBLE);
+            if (mSelectedDare.getCompletedUserIds().contains(mLoggedInUser.getUid())){ // Already completed dare
+                Log.e(TAG, "setUI << User already completed the dare" );
+                btnText = "Add Review";
+                mbtnAddReview.setVisibility(View.VISIBLE);
+                mbtnUploadPicture.setVisibility(View.VISIBLE);
             }
 
             mbtnActionButton.setText(btnText);
@@ -208,6 +225,7 @@ public class DareDetailsActivity extends Activity {
 
     public void onActionClick(View v)
     {
+        Log.e(TAG, "onActionClick >> ");
         if(mLoggedInUser.isAnonymous()){
             Toast.makeText(this, "You are not allowed to buy this dare ,please sign in/sign up.", Toast.LENGTH_LONG).show();
             signOut();
@@ -218,26 +236,21 @@ public class DareDetailsActivity extends Activity {
         if(mUserDetails == null) {
             Toast.makeText(this, "Service not available yet. Please try again soon", Toast.LENGTH_SHORT).show();
             return; // Not ready yet
-        } else if (!mSelectedDare.getAttemptingUserID().contains(mLoggedInUser.getUid())){ // User is buying dare
+        } else if (!mSelectedDare.getAttemptingUserID().contains(mLoggedInUser.getUid()) && !mSelectedDare.getCompletedUserIds().contains(mLoggedInUser.getUid())) { // User is buying dare
             handlePurchase();
-        } else { // User is uploading completion image
-            handleUploadCompletionImage();
-            sendPictureToEmail();
+        } else {
+            handleSelectingCompletionImage();
         }
+        Log.e(TAG, "onActionClick << ");
     }
 
-    private void sendPictureToEmail() {
-        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, mSelectedDare.getCreaterEmail());
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Completed mission");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "user" + mLoggedInUser.getDisplayName() + "completed the mission");
-        emailIntent.setType("image/jpeg");
-        emailIntent.putExtra(Intent.EXTRA_STREAM, contentURI);
-        startActivity(Intent.createChooser(emailIntent,"Share image using"));
-        finish();
+    public void onUploadImageClick(View v) {
+        Log.e(TAG, "onUploadImageClick >> ");
+        uploadImage();
+        Log.e(TAG, "onUploadImageClick <<");
     }
 
-    private void handleUploadCompletionImage() {
+    private void handleSelectingCompletionImage() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
@@ -257,7 +270,6 @@ public class DareDetailsActivity extends Activity {
         } else {
             Toast.makeText(this, "You cannot afford this dare", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void updateDB() {
@@ -272,9 +284,10 @@ public class DareDetailsActivity extends Activity {
         if (resultCode == RESULT_OK && requestCode == GALLERY && data != null) {
             try {
                 contentURI = data.getData();
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-                uploadImage(bitmap);
-                Log.e(TAG, "onActivityResult << Selecting photo");
+                mCompletionImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+                mIsPicSelected = true;
+                setUI();
+                Log.e(TAG, "onActivityResult << Selected photo");
             } catch (Exception e) {
                 Log.e(TAG, "onActivityResult << Error! Unable to retrieve photo");
                 e.printStackTrace();
@@ -284,9 +297,9 @@ public class DareDetailsActivity extends Activity {
         Log.e(TAG, "onActivityResult >>");
     }
 
-    private void uploadImage(Bitmap bitmap) {
+    private void uploadImage() {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        mCompletionImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
 
         // Upload image
@@ -312,15 +325,14 @@ public class DareDetailsActivity extends Activity {
         });
     }
 
-    public void onAddReviewClick(View v)
-    {
-        Log.e(TAG, "onAddReviewClick() >>" );
+    public void onAddReviewClick(View v) {
+        Log.e(TAG, "onAddReview() >>" );
 
         Intent writeReviewIntent = new Intent(getApplicationContext(), WriteReviewActivity.class);
         writeReviewIntent.putExtra("dareID", mSelectedDare.getDareId());
         startActivity(writeReviewIntent);
 
-        Log.e(TAG, "onAddReviewClick() << ");
+        Log.e(TAG, "onAddReview() << ");
     }
 
     private void dareCompleted() {

@@ -50,18 +50,6 @@ public class Dare implements Parcelable {
         in.readStringList(mCompletedUserIds);
     }
 
-    //TODO: remove this before handing assignment
-    public Dare(String createrID, String createrEmail, String createrName, String dareName, String description, int buyInCost) {
-        this.mCreaterID = createrID;
-        this.mCreaterEmail = createrEmail;
-        this.mCreaterName = createrName;
-        this.mDareName = dareName;
-        this.mDescription = description;
-        this.mAttemptingUserID = null;
-        this.mCompletedUserIds = null;
-        this.mBuyInCost = buyInCost;
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mDareId);

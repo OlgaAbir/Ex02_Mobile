@@ -13,7 +13,7 @@ public class Review implements Parcelable {
 
     private String mText;
     private String mWriterID;
-    private String mWriterName;// TODO: Dean add this to reviews database please and generate reviews in the database
+    private String mWriterName;
     private Date mCreationDate;
 
     public Review() {}

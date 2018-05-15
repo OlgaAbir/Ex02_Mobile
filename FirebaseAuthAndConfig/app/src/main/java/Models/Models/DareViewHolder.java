@@ -28,11 +28,9 @@ public class DareViewHolder extends RecyclerView.ViewHolder{
     private TextView mDareName;
     private TextView mProfit;
     private TextView mPrice;
-    private ImageView mDareImg; // The image that describes the dare
+    private ImageView mDareImg;
     private Dare mSelectedDare;
     private Context mContext;
-    StorageReference mStorageRef;
-
 
     public DareViewHolder(Context context, View itemView) {
         super(itemView);
@@ -57,26 +55,7 @@ public class DareViewHolder extends RecyclerView.ViewHolder{
                 context.startActivity(intent);
             }
         });
-
-//        mStorageRef = FirebaseStorage.getInstance().getReference("Dares").child(mSelectedDare.getDareId()).child("DescriptionImage.jpeg");
-////        StorageReference httpRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://firebaseauth-1523983161670.appspot.com/Dares/" + mSelectedDare.getDareId() + "DescriptionImage");
-//
-//        mStorageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//            @Override
-//            public void onSuccess(byte[] bytes) {
-//                Log.e(TAG, "on download image success >> ");
-//                Bitmap bmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//                mDareImg.setImageBitmap(bmap);
-//                Log.e(TAG, "on download image success << ");
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception exception) {
-//                Log.e(TAG, "on download image failure >>");
-//                Log.e(TAG, "on download image failure <<");
-//            }
-//        });
-    }
+       }
 
     public Dare getSelectedDare(){ return mSelectedDare;}
 

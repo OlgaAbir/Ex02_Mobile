@@ -93,8 +93,6 @@ public class UserProfileActivity extends Activity {
         getUserDetails();
         mUserDetailsDatabaseRef = FirebaseDatabase.getInstance().getReference("UserDetails").child(mLoggedInUser.getUid());
         setUI();
-        //tempLoadToDatabase(); //TODO: This is a temp function for creating the dummy dares. Remove before finishing assignment
-        //getDaresFromDB();
 
         Log.e(TAG, "onCreate <<");
     }
