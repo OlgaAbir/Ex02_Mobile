@@ -28,17 +28,17 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
-    compile 'com.google.android.gms:play-services-auth:15.0.0'
-    compile 'com.google.firebase:firebase-core:15.0.0'
-    compile 'com.google.firebase:firebase-auth:15.0.0'
-    compile 'com.google.firebase:firebase-config:15.0.0'
-    compile 'com.google.firebase:firebase-database:15.0.0'
+    implementation 'com.google.android.gms:play-services-auth:15.0.0'
+    implementation 'com.google.firebase:firebase-core:15.0.0'
+    implementation 'com.google.firebase:firebase-auth:15.0.0'
+    implementation 'com.google.firebase:firebase-config:15.0.0'
+    implementation 'com.google.firebase:firebase-database:15.0.0'
     implementation 'com.google.firebase:firebase-storage:15.0.0'
     implementation 'com.firebaseui:firebase-ui-storage:0.6.0'
 
 
 
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:26.1.1'
 }
 apply plugin: 'com.google.gms.google-services'
 configurations.all {
@@ -48,7 +48,8 @@ configurations.all {
             details.useVersion '15.0.0'
         } else if (requested.group == 'com.google.android.gms') {
             details.useVersion '15.0.0'
+        } else if (requested.group == 'com.android.support') {
+            details.useVersion '26.0.0'
         }
-
     }
 }

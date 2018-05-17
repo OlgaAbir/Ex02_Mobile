@@ -55,7 +55,9 @@ public class DareViewHolder extends RecyclerView.ViewHolder{
                 context.startActivity(intent);
             }
         });
-       }
+
+        AnalyticsManager.getInstance().trackDareEvents(AnalyticsManager.eDareEventType.DareSelected, mSelectedDare);
+    }
 
     public Dare getSelectedDare(){ return mSelectedDare;}
 

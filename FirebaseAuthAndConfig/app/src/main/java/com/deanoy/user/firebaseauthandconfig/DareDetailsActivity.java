@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import Models.AnalyticsManager;
 import Models.Dare;
 import Models.Review;
 import Models.ReviewsAdapter;
@@ -243,6 +244,7 @@ public class DareDetailsActivity extends Activity {
             return; // Not ready yet
         } else if (!mSelectedDare.getAttemptingUserID().contains(mLoggedInUser.getUid()) && !mSelectedDare.getCompletedUserIds().contains(mLoggedInUser.getUid())) { // User is buying dare
             handlePurchase();
+            trackDareEvents(AnalyticsManager.eDareEventType.DarePurchase);
         } else {
             handleSelectingCompletionImage();
         }
@@ -292,6 +294,7 @@ public class DareDetailsActivity extends Activity {
                 mCompletionImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
                 mIsPicSelected = true;
                 setUI();
+                trackDareEvents(AnalyticsManager.eDareEventType.ImageSelection);
                 Log.e(TAG, "onActivityResult << Selected photo");
             } catch (Exception e) {
                 Log.e(TAG, "onActivityResult << Error! Unable to retrieve photo");
@@ -318,6 +321,7 @@ public class DareDetailsActivity extends Activity {
             public void onFailure(@NonNull Exception exception) {
                 // Handle unsuccessful uploads
                 Toast.makeText(DareDetailsActivity.this, "Failed uploading image.", Toast.LENGTH_SHORT).show();
+                trackDareEvents(AnalyticsManager.eDareEventType.ImageUpload);
                 Log.e(TAG, "Failed uploading to storage.");
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -358,5 +362,11 @@ public class DareDetailsActivity extends Activity {
         LoginManager.getInstance().logOut();
 
         Log.e(TAG, "signOut <<");
+    }
+
+    //Analytics
+
+    private void trackDareEvents(AnalyticsManager.eDareEventType dareEventType) {
+        AnalyticsManager.getInstance().trackDareEvents(dareEventType, mSelectedDare);
     }
 }

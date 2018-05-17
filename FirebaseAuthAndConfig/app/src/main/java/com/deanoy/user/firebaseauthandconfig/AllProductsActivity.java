@@ -12,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,12 +23,17 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
+
+import Models.AnalyticsManager;
 import Models.Dare;
 import Models.DaresAdapter;
 
 public class AllProductsActivity extends Activity {
     private static String TAG = "AllProductsActivity";
     private static String SPINNER_UNFILTERED_OPTION = "All";
+    private static String FACEBOOK_AUTH = "facebook.com";
+    private static String GMAIL_AUTH = "google.com";
+
 
     private FirebaseAuth mAuth;
     private FirebaseDatabase mDatabase ;
@@ -70,6 +77,7 @@ public class AllProductsActivity extends Activity {
         mspnNames.setAdapter(mNamesAdapter);
 
         getAllDares();
+        trackSignInEvents();
         Log.e(TAG, "onCreate <<");
     }
 
@@ -118,6 +126,7 @@ public class AllProductsActivity extends Activity {
             minProfit = Integer.parseInt(metMinProfit.getText().toString());
         }
 
+        trackFilterEvent(shouldFilterByProfit, minProfit, shouldFilterByName, selectedName);
         // Filter
         for(Dare dare: mDaresList) {
             if((dare.getProfit() >= minProfit) && (!shouldFilterByName || selectedName.equals(dare.getCreaterName()))) {
@@ -147,6 +156,7 @@ public class AllProductsActivity extends Activity {
             }
         });
         mDaresView.getAdapter().notifyDataSetChanged();
+        AnalyticsManager.getInstance().trackSortingMethod("Profit");
     }
 
     public void onDescriptionSortClick(View v) {
@@ -157,6 +167,7 @@ public class AllProductsActivity extends Activity {
             }
         });
         mDaresView.getAdapter().notifyDataSetChanged();
+        AnalyticsManager.getInstance().trackSortingMethod("Description");
     }
 
     private void getDaresFromDB() {
@@ -196,5 +207,61 @@ public class AllProductsActivity extends Activity {
             }
         });
         Log.e(TAG, "getDaresFromDB() <<" );
+    }
+
+    // Analytics
+
+    private void trackSignInEvents() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        AnalyticsManager.getInstance().setUserID(user.getUid());
+        String signInMethod;
+
+        if(user.isAnonymous()) {
+            signInMethod = "Anonymous";
+        } else if(isUsingAuthMethod(GMAIL_AUTH)) {
+            signInMethod = GMAIL_AUTH;
+        } else if(isUsingAuthMethod(FACEBOOK_AUTH)) {
+            signInMethod = FACEBOOK_AUTH;
+        } else {
+            signInMethod = "email/pass";
+        }
+
+        AnalyticsManager.getInstance().trackSignInEvent(signInMethod);
+    }
+
+    private void trackFilterEvent(boolean isProfitFiltered, int profit, boolean isNameFiltered, String selectedName) {
+        if (!isProfitFiltered && !isNameFiltered) {
+            return; // No filter was selected, nothing to track.
+        }
+
+        String filterMethod;
+        String value;
+
+        if(isProfitFiltered && isNameFiltered) {
+            filterMethod = "Name and Profit";
+            value = String.format("Name: %s, Min profit: %d", selectedName, profit);
+        } else if (isProfitFiltered) {
+            filterMethod = "Profit";
+            value = Integer.toString(profit);
+        } else {
+            filterMethod = "Name";
+            value = selectedName;
+        }
+
+        AnalyticsManager.getInstance().trackFilterMethod(filterMethod, value);
+    }
+
+    // Check if the user is logged in using the auth type in the parameter
+    private boolean isUsingAuthMethod(String authType) {
+        boolean isUsingAuthMethod = false;
+
+        for (UserInfo user : FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
+            if (user.getProviderId().equals(authType)) {
+                Log.e(TAG, "User is signed in with " + authType);
+                isUsingAuthMethod = true;
+            }
+        }
+
+        return isUsingAuthMethod;
     }
 }

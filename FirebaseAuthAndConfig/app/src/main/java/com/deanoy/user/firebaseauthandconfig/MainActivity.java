@@ -35,6 +35,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.util.Arrays;
 
+import Models.AnalyticsManager;
 import Models.UserDetails;
 
 public class MainActivity extends Activity {
@@ -67,6 +68,7 @@ public class MainActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        AnalyticsManager.getInstance().init(getApplicationContext());
         initFirebaseServices();
         bindUI();
 
