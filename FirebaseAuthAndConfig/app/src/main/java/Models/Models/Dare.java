@@ -28,8 +28,8 @@ public class Dare implements Parcelable {
     private String mDareId;
     private String mDareName;
     private String mDescription;
-    private ArrayList<String> mAttemptingUserID;
-    private ArrayList<String> mCompletedUserIds;
+    private ArrayList<String> mAttemptingUserID = new ArrayList<>();
+    private ArrayList<String> mCompletedUserIds = new ArrayList<>();
     private int mBuyInCost; // The amount of money used to buy in to attempt the dare
 
     //Dare progress
@@ -44,10 +44,17 @@ public class Dare implements Parcelable {
         mDescription = in.readString();
         mBuyInCost = in.readInt();
 
-        mAttemptingUserID = new ArrayList<>();
+
         in.readStringList(mAttemptingUserID);
-        mCompletedUserIds = new ArrayList<>();
+        if(mAttemptingUserID == null) {
+            mAttemptingUserID = new ArrayList<>();
+        }
+
+
         in.readStringList(mCompletedUserIds);
+        if(mCompletedUserIds == null) {
+            mCompletedUserIds = new ArrayList<>();
+        }
     }
 
     @Override

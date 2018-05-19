@@ -57,6 +57,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".DareDetailsActivity" />
         <activity android:name=".WriteReviewActivity"></activity>
+        <meta-data android:name="com.appsee.ApiKey" android:value="aeb9804d7619474bb57d68062f7e3eac" />
     </application>
 
 </manifest>

@@ -13,6 +13,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Date;
 
+import Models.AnalyticsManager;
 import Models.Dare;
 import Models.Review;
 
@@ -53,6 +54,7 @@ public class WriteReviewActivity extends Activity {
         String newReviewKey = mReviewsDatabaseRef.push().getKey();
         mReviewsDatabaseRef.child(newReviewKey).setValue(newReview);
 
+        AnalyticsManager.getInstance().trackAddReview(newReview);
         displayMessage("Review was added successfully");
         finish();
 

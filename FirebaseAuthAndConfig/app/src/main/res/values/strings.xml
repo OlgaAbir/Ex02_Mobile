@@ -3,4 +3,12 @@
     <string name="app_name">FirebaseAuthAndConfig</string>
     <string name="facebook_app_id">589626191414618</string>
     <string name="fb_login_protocol_scheme">fb589626191414618</string>
+
+    <!-- User Properties -->
+    <string name="user_name">user_name</string>
+    <string name="dares_purchased_count">dares_purchased_count</string>
+    <string name="dares_completed_count">dares_completed_count</string>
+    <string name="dares_created_count">dares_created_count</string>
+    <string name="balance">balance</string>
+
 </resources>

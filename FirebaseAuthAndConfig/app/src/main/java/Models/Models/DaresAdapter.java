@@ -17,7 +17,6 @@ public class DaresAdapter extends RecyclerView.Adapter<DareViewHolder> {
     private List<Dare> mDaresList;
 
     public DaresAdapter(List<Dare> daresList) {
-
         mDaresList = daresList;
     }
 

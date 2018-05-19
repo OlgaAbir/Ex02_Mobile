@@ -328,6 +328,7 @@ public class DareDetailsActivity extends Activity {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 dareCompleted();
+                AnalyticsManager.getInstance().trackDareEvents(AnalyticsManager.eDareEventType.ImageUpload, mSelectedDare);
                 Log.e(TAG, "Successfully uploaded image to storage.");
                 Toast.makeText(DareDetailsActivity.this, "Successfully uploading image.", Toast.LENGTH_SHORT).show();
             }

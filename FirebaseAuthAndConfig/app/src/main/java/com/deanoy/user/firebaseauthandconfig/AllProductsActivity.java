@@ -27,13 +27,13 @@ import java.util.TreeSet;
 import Models.AnalyticsManager;
 import Models.Dare;
 import Models.DaresAdapter;
+import Models.UserDetails;
 
 public class AllProductsActivity extends Activity {
     private static String TAG = "AllProductsActivity";
     private static String SPINNER_UNFILTERED_OPTION = "All";
     private static String FACEBOOK_AUTH = "facebook.com";
     private static String GMAIL_AUTH = "google.com";
-
 
     private FirebaseAuth mAuth;
     private FirebaseDatabase mDatabase ;
@@ -45,7 +45,7 @@ public class AllProductsActivity extends Activity {
     private ArrayList<String> mNamesArray = new ArrayList<String>();
     private List<Dare> mDaresList = new ArrayList<>();
     private ArrayList<Dare> mTempDareArray = new ArrayList<>(); // for backing up dares
-
+    private UserDetails mUserDetails;
 
     // UI
     private Spinner mspnNames;
@@ -76,6 +76,7 @@ public class AllProductsActivity extends Activity {
         mNamesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mspnNames.setAdapter(mNamesAdapter);
 
+        getUserDetails();
         getAllDares();
         trackSignInEvents();
         Log.e(TAG, "onCreate <<");
@@ -185,18 +186,24 @@ public class AllProductsActivity extends Activity {
                 mNamesArray.add(SPINNER_UNFILTERED_OPTION);
                 mNameSet.clear();
                 Dare dare;
+                int userDaresCounter = 0;
                 for (DataSnapshot dareSnapshot: dataSnapshot.getChildren()) {
                     dare = dareSnapshot.getValue(Dare.class);
                     dare.setDareId(dareSnapshot.getKey());
                     Log.e(TAG, "Dare: " + dare.toString());
                     mDaresList.add(dare);
                     mNameSet.add(dare.getCreaterName());
+
+                    if(dare.getCreaterID().contentEquals(mAuth.getCurrentUser().getUid())) {
+                        userDaresCounter++;
+                    }
                 }
 
                 mTempDareArray.addAll(mDaresList);
                 mDaresView.getAdapter().notifyDataSetChanged();
                 mNamesArray.addAll(mNameSet);
                 mspnNames.setAdapter(mNamesAdapter);
+                AnalyticsManager.getInstance().setUserProperty(getApplicationContext().getString(R.string.dares_created_count), Integer.toString(userDaresCounter));
                 Log.e(TAG, "onDataChange() <<" );
             }
 
@@ -209,7 +216,34 @@ public class AllProductsActivity extends Activity {
         Log.e(TAG, "getDaresFromDB() <<" );
     }
 
+    private void getUserDetails() {
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseDatabase.getInstance().getReference("UserDetails").child(userID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.e(TAG, "onDataChange() >>" );
+                mUserDetails = dataSnapshot.getValue(UserDetails.class);
+                if(mUserDetails == null) {
+                    mUserDetails = new UserDetails();
+                }
+                setUserProperties();
+                Log.e(TAG, "onDataChange() <<" );
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "Failed to read value.", databaseError.toException());
+            }
+        });
+    }
+
     // Analytics
+
+    private void setUserProperties() {
+        AnalyticsManager.getInstance().setUserProperty(getApplicationContext().getString(R.string.dares_completed_count), Integer.toString(mUserDetails.getCompletedDareIds().size()));
+        AnalyticsManager.getInstance().setUserProperty(getApplicationContext().getString(R.string.dares_purchased_count), Integer.toString(mUserDetails.getPurchasedDareIds().size()));
+        AnalyticsManager.getInstance().setUserProperty(getApplicationContext().getString(R.string.balance), Integer.toString(mUserDetails.getBalance()));
+    }
 
     private void trackSignInEvents() {
         FirebaseUser user = mAuth.getCurrentUser();
@@ -226,6 +260,7 @@ public class AllProductsActivity extends Activity {
             signInMethod = "email/pass";
         }
 
+        AnalyticsManager.getInstance().setUserProperty(getApplicationContext().getString(R.string.user_name), user.getDisplayName());
         AnalyticsManager.getInstance().trackSignInEvent(signInMethod);
     }
 

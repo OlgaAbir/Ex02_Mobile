@@ -49,14 +49,13 @@ public class DareViewHolder extends RecyclerView.ViewHolder{
 
                 Log.e(TAG, "CardView.onClick() >> Dare =" + mSelectedDare.toString());
 
+                AnalyticsManager.getInstance().trackDareEvents(AnalyticsManager.eDareEventType.DareSelected, mSelectedDare);
                 Context context = view.getContext();
                 Intent intent = new Intent(context, DareDetailsActivity.class);
                 intent.putExtra("dare", mSelectedDare);
                 context.startActivity(intent);
             }
         });
-
-        AnalyticsManager.getInstance().trackDareEvents(AnalyticsManager.eDareEventType.DareSelected, mSelectedDare);
     }
 
     public Dare getSelectedDare(){ return mSelectedDare;}

@@ -26,12 +26,13 @@ public class UserDetails implements Parcelable {
 
     protected UserDetails(Parcel in) {
         mBalance = in.readInt();
-        mPurchasedDareIds = in.readArrayList(getClass().getClassLoader());
+
+        in.readStringList(mPurchasedDareIds);
         if(mPurchasedDareIds == null) {
             mPurchasedDareIds = new ArrayList<>();
         }
 
-        mCompletedDareIds = in.readArrayList(getClass().getClassLoader());
+        in.readStringList(mCompletedDareIds);
         if(mCompletedDareIds == null) {
             mCompletedDareIds = new ArrayList<>();
         }
