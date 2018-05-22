@@ -16,7 +16,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    sourceSets { main { java.srcDirs = ['src/main/java', 'src/main/java/Models'] } }
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java', 'src/main/java/Models', 'src/main/java/PushNotifications']
+        }
+    }
 }
 
 dependencies {
@@ -34,6 +38,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-config:15.0.0'
     implementation 'com.google.firebase:firebase-database:15.0.0'
     implementation 'com.google.firebase:firebase-storage:15.0.0'
+    implementation 'com.google.firebase:firebase-messaging:15.0.0'
     implementation 'com.firebaseui:firebase-ui-storage:0.6.0'
     implementation 'com.appsee:appsee-android:+'
 
