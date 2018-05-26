@@ -1,8 +1,11 @@
 package Models;
 
+import android.app.PendingIntent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.support.v4.app.NotificationCompat;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class MessagingData {
@@ -11,6 +14,8 @@ public class MessagingData {
     private int mIconId;
     private Uri mSoundRri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
     private Map<String, String> mData;
+    private ArrayList<NotificationCompat.Action> mActions = new ArrayList<>();
+    private PendingIntent mPendingIntent;
 
     public String getTitle() {
         return mTitle;
@@ -50,5 +55,25 @@ public class MessagingData {
 
     public void setData(Map<String, String> data) {
         this.mData= data;
+    }
+
+    public ArrayList<NotificationCompat.Action>  getActions() {
+        return mActions;
+    }
+
+    public void addAction(NotificationCompat.Action action) {
+        this.mActions.add(action);
+    }
+
+    public PendingIntent getPendingIntent() {
+        return mPendingIntent;
+    }
+
+    public void setPendingIntent(PendingIntent pendingIntent) {
+        this.mPendingIntent = pendingIntent;
+    }
+
+    public void clearActions() {
+        mActions.clear();
     }
 }

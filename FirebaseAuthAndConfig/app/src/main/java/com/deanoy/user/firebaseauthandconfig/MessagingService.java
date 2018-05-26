@@ -29,14 +29,11 @@ public class MessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
         Log.e(TAG, "onMessageReceived() >>");
-        String title = "title";
-        String body = "body";
+        String title;
+        String body;
 
-        //int icon = R.drawable.ic_notifications_black_24dp;
         RemoteMessage.Notification notification;
 
-
-        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.e(TAG, "From: " + remoteMessage.getFrom());
 
 
@@ -50,11 +47,14 @@ public class MessagingService extends FirebaseMessagingService {
         }
 
         parseData(remoteMessage);
+        buildNotification();
 
         Log.e(TAG, "onMessageReceived() <<");
     }
 
     private void parseData(RemoteMessage remoteMessage) {
+        Log.e(TAG, "parseData() >>");
+
         //parse the data
         mMessagingData.setSoundRri(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
         mMessagingData.setData(remoteMessage.getData());
@@ -72,7 +72,7 @@ public class MessagingService extends FirebaseMessagingService {
 
         value = mMessagingData.getData().get("small_icon");
         if (value != null  && value.equals("alarm")) {
-            mMessagingData.setIcon(R.drawable.ic_filter_24dp); //TODO: change image to a custom one
+            mMessagingData.setIcon(R.drawable.ic_filter_24dp); //TODO: choose icon
         }
         value = mMessagingData.getData().get("sound");
         if (value != null) {
@@ -84,22 +84,47 @@ public class MessagingService extends FirebaseMessagingService {
         }
 
         Intent intent = new Intent(this, MainActivity.class);
-
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 , intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        mMessagingData.setPendingIntent(PendingIntent.getActivity(this, 0 , intent,
+                PendingIntent.FLAG_ONE_SHOT));
 
+        value = mMessagingData.getData().get("action");
+        if (value != null) {
+            if (value.contains("share")) {
+                intent = new Intent(this, UserProfileActivity.class); //TODO: add data depending on the push notification sale like "discount, dareID"
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                mMessagingData.setPendingIntent(PendingIntent.getActivity(this, 0 , intent,
+                        PendingIntent.FLAG_ONE_SHOT));
+                mMessagingData.addAction(new NotificationCompat.Action(R.drawable.moneygun,"Share", mMessagingData.getPendingIntent()));
+            }
+            if (value.contains("go to dare!")) {
+                intent = new Intent(this, AllProductsActivity.class); //TODO: add data depending on the push notification sale like "discount, dareID"
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                mMessagingData.setPendingIntent(PendingIntent.getActivity(this, 0 , intent,
+                        PendingIntent.FLAG_ONE_SHOT));
+                mMessagingData.addAction(new NotificationCompat.Action(R.drawable.moneygun,"Go to dare!", mMessagingData.getPendingIntent()));
+            }
+        }
+        Log.e(TAG, "parseData() <<");
+    }
+
+    private void buildNotification() {
+        Log.e(TAG, "buildNotification() >>");
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, null)
                         .setContentTitle(mMessagingData.getTitle())
                         .setContentText(mMessagingData.getBody())
-                        .setContentIntent(pendingIntent)
+                        .setContentIntent(mMessagingData.getPendingIntent())
                         .setSmallIcon(mMessagingData.getIcon())
                         .setSound(mMessagingData.getSoundRri());
 
+        for(NotificationCompat.Action action: mMessagingData.getActions()) {
+            notificationBuilder.addAction(action);
+        }
+
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0 , notificationBuilder.build());
-
-        Log.e(TAG, "onMessageReceived() <<");
+        mMessagingData.clearActions(); // Clear actions for next notification
+        Log.e(TAG, "buildNotification() <<");
     }
 }
