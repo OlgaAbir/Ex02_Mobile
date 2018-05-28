@@ -145,6 +145,12 @@ public class DareDetailsActivity extends Activity {
             }
 
             mbtnActionButton.setText(btnText);
+
+            if(AdvancedNotificationData.getInstance().getReviewBonus() > 0)
+            {
+                mbtnAddReview.setText(mbtnAddReview.getText() + " for Bonus");
+            }
+
         } else { // User is anonymous
             Log.e(TAG, "setUI << User is anonymous, hide add review button");
             mbtnAddReview.setVisibility(View.INVISIBLE);

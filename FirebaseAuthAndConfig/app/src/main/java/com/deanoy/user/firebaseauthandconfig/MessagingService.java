@@ -103,6 +103,11 @@ public class MessagingService extends FirebaseMessagingService {
                     AdvancedNotificationData.getInstance().setSale(Integer.parseInt(mMessagingData.getData().get("sale").toString()));
                 }
 
+                if(mMessagingData.getData().containsKey("reviewBonus"))
+                {
+                    AdvancedNotificationData.getInstance().setReviewBonus(Integer.parseInt(mMessagingData.getData().get("reviewBonus")));
+                }
+
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 mMessagingData.setPendingIntent(PendingIntent.getActivity(this, 0 , intent,
                         PendingIntent.FLAG_ONE_SHOT));

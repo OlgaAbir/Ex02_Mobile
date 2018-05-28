@@ -140,10 +140,11 @@
 
     <Button
         android:id="@+id/btnAddReview"
-        android:layout_width="154dp"
+        android:layout_width="342dp"
         android:layout_height="41dp"
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"
+        android:backgroundTint="@android:color/holo_green_light"
         android:onClick="onAddReviewClick"
         android:text="Add Review"
         app:layout_constraintBottom_toBottomOf="parent"
