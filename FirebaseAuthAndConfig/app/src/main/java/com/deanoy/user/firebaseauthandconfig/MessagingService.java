@@ -1,5 +1,6 @@
 package com.deanoy.user.firebaseauthandconfig;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -121,6 +122,7 @@ public class MessagingService extends FirebaseMessagingService {
                         .setSmallIcon(R.drawable.small)
                         .setLargeIcon(BitmapFactory.decodeResource(getResources(),mMessagingData.getIcon()))
                         .setSound(mMessagingData.getSoundRri())
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel(true)
                         .setOngoing(false);
 
