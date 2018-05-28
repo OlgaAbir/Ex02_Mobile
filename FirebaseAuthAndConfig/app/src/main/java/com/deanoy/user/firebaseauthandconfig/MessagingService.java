@@ -16,6 +16,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
 
+import Models.AdvancedNotificationData;
 import Models.MessagingData;
 
 public class MessagingService extends FirebaseMessagingService {
@@ -93,8 +94,13 @@ public class MessagingService extends FirebaseMessagingService {
 
         value = mMessagingData.getData().get("action");
         if (value != null) {
-            if (value.contains("go to dare!")) {
+            if (value.contains("go to dares")) {
                 intent = new Intent(this, AllProductsActivity.class);
+
+                if(mMessagingData.getData().containsKey("sale"))
+                {
+                    AdvancedNotificationData.getInstance().setSale(Integer.parseInt(mMessagingData.getData().get("sale").toString()));
+                }
 
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 mMessagingData.setPendingIntent(PendingIntent.getActivity(this, 0 , intent,

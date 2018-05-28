@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import Models.AdvancedNotificationData;
 import Models.AnalyticsManager;
 import Models.Dare;
 import Models.Review;
@@ -154,7 +155,14 @@ public class DareDetailsActivity extends Activity {
 
         mtvDetailsDareName.setText("Name: " + mSelectedDare.getDareName());
         mtvDetailsPublisher.setText("Publisher: " + mSelectedDare.getCreaterName());
-        mtvDetailsPrice.setText("Price: " + mSelectedDare.getBuyInCost());
+        String priceText = "Price: " + mSelectedDare.getBuyInCost();
+
+        if(AdvancedNotificationData.getInstance().getSale() > 0)
+        {
+            priceText += " - " + AdvancedNotificationData.getInstance().getSale() + "%";
+        }
+
+        mtvDetailsPrice.setText(priceText);
         mtvDetailsProfit.setText("Profit: " + mSelectedDare.getProfit());
         mtvDetailsDescription.setText("I dare you to: " + mSelectedDare.getDescription());
 
@@ -268,10 +276,12 @@ public class DareDetailsActivity extends Activity {
         int balance = mUserDetails.getBalance();
 
         Log.e(TAG,mUserDetails.toString());
-        if(balance >= mSelectedDare.getBuyInCost()) {
-            mUserDetails.setBalance(balance - mSelectedDare.getBuyInCost());
+        int price = mSelectedDare.getBuyInCost() - (AdvancedNotificationData.getInstance().getSale() * mSelectedDare.getBuyInCost() / 100);
+        if(balance >= price) {
+            mUserDetails.setBalance(balance - price);
             mUserDetails.getPurchasedDareIds().add(mSelectedDare.getDareId()); // Add dare to purchased
             mSelectedDare.getAttemptingUserID().add(mLoggedInUser.getUid());
+            AdvancedNotificationData.getInstance().setSale(0); // End sale
             setUI();
             updateDB();
         } else {

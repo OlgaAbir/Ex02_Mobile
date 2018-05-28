@@ -43,7 +43,14 @@ public class DaresAdapter extends RecyclerView.Adapter<DareViewHolder> {
         holder.setSelectedDare(dare);
         holder.getDareName().setText("Name: " + dare.getDareName());
         holder.getCreatorName().setText("Publisher: " + dare.getCreaterName());
-        holder.getPrice().setText("Price: " + dare.getBuyInCost());
+        String price = "Price: " + dare.getBuyInCost();
+
+        if(AdvancedNotificationData.getInstance().getSale() > 0)
+        {
+            price += " -" + AdvancedNotificationData.getInstance().getSale() + "%";
+        }
+
+        holder.getPrice().setText(price);
         holder.getProfit().setText("Profit: " + dare.getProfit());
 
         Log.e(TAG,"onBindViewHolder() << "+ position);
