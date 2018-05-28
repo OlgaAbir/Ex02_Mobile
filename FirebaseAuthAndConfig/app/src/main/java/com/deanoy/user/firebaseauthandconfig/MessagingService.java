@@ -4,6 +4,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
@@ -56,7 +58,6 @@ public class MessagingService extends FirebaseMessagingService {
         Log.e(TAG, "parseData() >>");
 
         //parse the data
-        mMessagingData.setSoundRri(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
         mMessagingData.setData(remoteMessage.getData());
         Log.e(TAG, "Message data : " + mMessagingData.getData());
 
@@ -70,9 +71,9 @@ public class MessagingService extends FirebaseMessagingService {
             mMessagingData.setBody(value);
         }
 
-        value = mMessagingData.getData().get("small_icon");
-        if (value != null  && value.equals("alarm")) {
-            mMessagingData.setIcon(R.drawable.ic_filter_24dp); //TODO: choose icon
+        value = mMessagingData.getData().get("large_icon");
+        if (value != null  && value.equals("icon")) {
+            mMessagingData.setIcon(R.drawable.notification);
         }
         value = mMessagingData.getData().get("sound");
         if (value != null) {
@@ -80,6 +81,8 @@ public class MessagingService extends FirebaseMessagingService {
                 mMessagingData.setSoundRri(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
             } else if (value.equals("ringtone")) {
                 mMessagingData.setSoundRri(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
+            } else{
+                mMessagingData.setSoundRri(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
             }
         }
 
@@ -90,15 +93,9 @@ public class MessagingService extends FirebaseMessagingService {
 
         value = mMessagingData.getData().get("action");
         if (value != null) {
-            if (value.contains("share")) {
-                intent = new Intent(this, UserProfileActivity.class); //TODO: add data depending on the push notification sale like "discount, dareID"
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                mMessagingData.setPendingIntent(PendingIntent.getActivity(this, 0 , intent,
-                        PendingIntent.FLAG_ONE_SHOT));
-                mMessagingData.addAction(new NotificationCompat.Action(R.drawable.moneygun,"Share", mMessagingData.getPendingIntent()));
-            }
             if (value.contains("go to dare!")) {
-                intent = new Intent(this, AllProductsActivity.class); //TODO: add data depending on the push notification sale like "discount, dareID"
+                intent = new Intent(this, AllProductsActivity.class);
+
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 mMessagingData.setPendingIntent(PendingIntent.getActivity(this, 0 , intent,
                         PendingIntent.FLAG_ONE_SHOT));
@@ -115,8 +112,11 @@ public class MessagingService extends FirebaseMessagingService {
                         .setContentTitle(mMessagingData.getTitle())
                         .setContentText(mMessagingData.getBody())
                         .setContentIntent(mMessagingData.getPendingIntent())
-                        .setSmallIcon(mMessagingData.getIcon())
-                        .setSound(mMessagingData.getSoundRri());
+                        .setSmallIcon(R.drawable.small)
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(),mMessagingData.getIcon()))
+                        .setSound(mMessagingData.getSoundRri())
+                        .setAutoCancel(true)
+                        .setOngoing(false);
 
         for(NotificationCompat.Action action: mMessagingData.getActions()) {
             notificationBuilder.addAction(action);
