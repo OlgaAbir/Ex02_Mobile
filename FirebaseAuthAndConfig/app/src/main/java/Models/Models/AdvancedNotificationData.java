@@ -1,6 +1,5 @@
 package Models;
 
-
 public class AdvancedNotificationData {
     private static AdvancedNotificationData mInstance;
     private int mSale; // discount in percents

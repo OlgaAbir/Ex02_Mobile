@@ -391,7 +391,6 @@ public class DareDetailsActivity extends Activity {
     }
 
     //Analytics
-
     private void trackDareEvents(AnalyticsManager.eDareEventType dareEventType) {
         AnalyticsManager.getInstance().trackDareEvents(dareEventType, mSelectedDare);
     }

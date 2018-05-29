@@ -1,22 +1,15 @@
 package com.deanoy.user.firebaseauthandconfig;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
-import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-
-import java.util.Map;
-
 import Models.AdvancedNotificationData;
 import Models.MessagingData;
 
@@ -24,9 +17,7 @@ public class MessagingService extends FirebaseMessagingService {
     private static final String TAG = "PushNotificationService";
     private static MessagingData mMessagingData = new MessagingData();
 
-    public MessagingService() {
-
-    }
+    public MessagingService() {}
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
