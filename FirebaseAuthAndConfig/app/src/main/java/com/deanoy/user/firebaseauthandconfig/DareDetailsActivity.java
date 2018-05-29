@@ -146,11 +146,6 @@ public class DareDetailsActivity extends Activity {
 
             mbtnActionButton.setText(btnText);
 
-            if(AdvancedNotificationData.getInstance().getReviewBonus() > 0)
-            {
-                mbtnAddReview.setText(mbtnAddReview.getText() + " for Bonus");
-            }
-
         } else { // User is anonymous
             Log.e(TAG, "setUI << User is anonymous, hide add review button");
             mbtnAddReview.setVisibility(View.INVISIBLE);
@@ -240,6 +235,20 @@ public class DareDetailsActivity extends Activity {
                 Log.e(TAG, "Failed to read value.", databaseError.toException());
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if(AdvancedNotificationData.getInstance().getReviewBonus() > 0)
+        {
+            mbtnAddReview.setText("Add Review" + " for Bonus");
+        }
+        else
+        {
+            mbtnAddReview.setText("Add Review");
+        }
     }
 
     // action button is buy /upload photo

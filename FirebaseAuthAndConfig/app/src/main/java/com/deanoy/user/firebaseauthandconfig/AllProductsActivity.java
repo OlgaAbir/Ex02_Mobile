@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,6 +25,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
 
+import Models.AdvancedNotificationData;
 import Models.AnalyticsManager;
 import Models.Dare;
 import Models.DaresAdapter;
@@ -49,6 +51,7 @@ public class AllProductsActivity extends Activity {
 
     // UI
     private Spinner mspnNames;
+    private Button mbtnFilter;
     private EditText metMinProfit;
 
     @Override
@@ -64,6 +67,7 @@ public class AllProductsActivity extends Activity {
 
         //UI
         mspnNames = findViewById(R.id.spnUserNames);
+        mbtnFilter = findViewById(R.id.btnFilter);
         metMinProfit = findViewById(R.id.etMinProfit);
         mDaresView = findViewById(R.id.recyclerView);
 
@@ -79,6 +83,7 @@ public class AllProductsActivity extends Activity {
         getUserDetails();
         getAllDares();
         trackSignInEvents();
+
         Log.e(TAG, "onCreate <<");
     }
 
@@ -91,6 +96,7 @@ public class AllProductsActivity extends Activity {
         {
             finish();
         }
+
         Log.e(TAG, "onStart <<");
     }
 
@@ -112,12 +118,20 @@ public class AllProductsActivity extends Activity {
     }
 
     public void onFilterClick(View v) {
+
         Log.e(TAG, "onFilterCLick >>" );
+
         ArrayList<Dare> filteredDaresArray = new ArrayList<>();
         int minProfit = 0;
         String selectedName = (String)mspnNames.getSelectedItem();
+
+        Log.e(TAG, "filtering by " + selectedName );
         boolean shouldFilterByName = !selectedName.equals(SPINNER_UNFILTERED_OPTION);
         boolean shouldFilterByProfit = !metMinProfit.getText().toString().isEmpty();
+
+        if(shouldFilterByName) {
+            Log.e(TAG, "filtering by Name");
+        }
 
         // Reset for re-filtering
         mDaresList.clear();
@@ -204,6 +218,16 @@ public class AllProductsActivity extends Activity {
                 mNamesArray.addAll(mNameSet);
                 mspnNames.setAdapter(mNamesAdapter);
                 AnalyticsManager.getInstance().setUserProperty(getApplicationContext().getString(R.string.dares_created_count), Integer.toString(userDaresCounter));
+
+                if(AdvancedNotificationData.getInstance().getFilterDares() != null &&
+                        !AdvancedNotificationData.getInstance().getFilterDares().isEmpty())
+                {
+                    int position = mNamesAdapter.getPosition(AdvancedNotificationData.getInstance().getFilterDares());
+                    mspnNames.setSelection(position);
+                    onFilterClick(mbtnFilter);
+                    AdvancedNotificationData.getInstance().setFilterDares("");
+                }
+
                 Log.e(TAG, "onDataChange() <<" );
             }
 

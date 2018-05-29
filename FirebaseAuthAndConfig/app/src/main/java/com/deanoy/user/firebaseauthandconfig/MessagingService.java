@@ -28,7 +28,6 @@ public class MessagingService extends FirebaseMessagingService {
 
     }
 
-
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
@@ -106,6 +105,11 @@ public class MessagingService extends FirebaseMessagingService {
                 if(mMessagingData.getData().containsKey("reviewBonus"))
                 {
                     AdvancedNotificationData.getInstance().setReviewBonus(Integer.parseInt(mMessagingData.getData().get("reviewBonus")));
+                }
+
+                if(mMessagingData.getData().containsKey("filter"))
+                {
+                    AdvancedNotificationData.getInstance().setFilterDares(mMessagingData.getData().get("filter"));
                 }
 
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
