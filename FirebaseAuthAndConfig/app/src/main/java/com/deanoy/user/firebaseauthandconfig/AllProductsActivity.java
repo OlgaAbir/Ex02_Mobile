@@ -56,9 +56,11 @@ public class AllProductsActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e(TAG, "onCreate >>");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_products);
-        Log.e(TAG, "onCreate >>");
+        setTitle("All Dares");
 
         //Firebase
         mAuth = FirebaseAuth.getInstance();

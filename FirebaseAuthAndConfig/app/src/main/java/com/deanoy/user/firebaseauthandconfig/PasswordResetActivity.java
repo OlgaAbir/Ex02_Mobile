@@ -24,6 +24,8 @@ public class PasswordResetActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_reset);
+        setTitle("Password Reset");
+
         bindUI();
         Intent intent = getIntent();
         String email = intent.getStringExtra(EMAIL_DATA);

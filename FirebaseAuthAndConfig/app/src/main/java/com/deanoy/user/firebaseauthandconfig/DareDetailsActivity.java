@@ -76,8 +76,11 @@ public class DareDetailsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.e(TAG, "onCreate >>" );
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dare_details);
+        setTitle("Details");
+
         mSelectedDare = getIntent().getParcelableExtra(DARE_DATA);
         getUserDetails();
         Log.e(TAG, "onCreate >> Dare =" + mSelectedDare.toString());

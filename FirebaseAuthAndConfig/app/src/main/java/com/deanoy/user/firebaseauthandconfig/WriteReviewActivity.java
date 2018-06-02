@@ -39,6 +39,7 @@ public class WriteReviewActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_review);
+        setTitle("Write Review");
 
         mAuth = FirebaseAuth.getInstance();
         String dareID = getIntent().getStringExtra("dareID");

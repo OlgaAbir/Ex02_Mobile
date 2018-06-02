@@ -80,6 +80,7 @@ public class UserProfileActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
+        setTitle("Profile");
 
         // binding and initialization
         mAuth = FirebaseAuth.getInstance();
