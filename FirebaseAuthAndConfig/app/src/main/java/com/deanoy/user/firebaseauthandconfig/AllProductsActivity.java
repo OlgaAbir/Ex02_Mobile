@@ -210,8 +210,10 @@ public class AllProductsActivity extends Activity {
                     mDaresList.add(dare);
                     mNameSet.add(dare.getCreaterName());
 
-                    if(dare.getCreaterID().contentEquals(mAuth.getCurrentUser().getUid())) {
-                        userDaresCounter++;
+                    if(mAuth.getCurrentUser() != null) {
+                        if (dare.getCreaterID().contentEquals(mAuth.getCurrentUser().getUid())) {
+                            userDaresCounter++;
+                        }
                     }
                 }
 

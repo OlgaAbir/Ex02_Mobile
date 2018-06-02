@@ -259,6 +259,7 @@ public class DareDetailsActivity extends Activity {
     {
         Log.e(TAG, "onActionClick >> ");
         if(mLoggedInUser.isAnonymous()){
+            Log.e(TAG, "user is Anonymous >> ");
             Toast.makeText(this, "You are not allowed to buy this dare ,please sign in/sign up.", Toast.LENGTH_LONG).show();
             signOut();
             Intent i = new Intent(this ,MainActivity.class);
