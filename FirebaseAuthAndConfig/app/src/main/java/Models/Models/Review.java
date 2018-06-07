@@ -5,10 +5,6 @@ import android.os.Parcelable;
 
 import java.util.Date;
 
-/**
- * Created by user on 28-Apr-18.
- */
-
 public class Review implements Parcelable {
 
     private String mText;

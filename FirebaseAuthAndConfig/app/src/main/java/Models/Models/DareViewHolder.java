@@ -22,7 +22,6 @@ import com.google.firebase.storage.StorageReference;
 public class DareViewHolder extends RecyclerView.ViewHolder{
 
     private static final String TAG = "DareViewHolder";
-    private static final long ONE_MEGABYTE = 1024 * 1024;
     private CardView mDareCardView;
     private TextView mCreatorName;
     private TextView mDareName;

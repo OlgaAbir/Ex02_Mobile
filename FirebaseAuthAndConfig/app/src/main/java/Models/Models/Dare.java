@@ -11,10 +11,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by user on 28-Apr-18.
- */
-
 // An object that represents a dare between 2 users.
 public class Dare implements Parcelable {
     public Dare() {}

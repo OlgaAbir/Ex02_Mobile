@@ -6,7 +6,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera"
+
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
 
     <application
@@ -17,19 +19,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         //Services:
-        <service
-            android:name=".MessagingService">
+        <service android:name=".MessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name=".InstanceIDService">
+        <service android:name=".InstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
         // Activities:
         <activity android:name=".MainActivity" />
         // Main activity
@@ -70,8 +69,13 @@
             android:name=".AllProductsActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".DareDetailsActivity" />
-        <activity android:name=".WriteReviewActivity"></activity>
-        <meta-data android:name="com.appsee.ApiKey" android:value="aeb9804d7619474bb57d68062f7e3eac" />
+        <activity android:name=".WriteReviewActivity" />
+
+        <meta-data
+            android:name="com.appsee.ApiKey"
+            android:value="aeb9804d7619474bb57d68062f7e3eac" />
+
+        <activity android:name=".DareCoinsStoreActivity"></activity>
     </application>
 
 </manifest>

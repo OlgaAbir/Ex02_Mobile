@@ -212,6 +212,13 @@ public class UserProfileActivity extends Activity {
         });
     }
 
+    public void onBuyDareCoinsClick(View v)
+    {
+        Intent i = new Intent(getApplicationContext(), DareCoinsStoreActivity.class);
+
+        startActivity(i);
+    }
+
     private void displayMessage(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
