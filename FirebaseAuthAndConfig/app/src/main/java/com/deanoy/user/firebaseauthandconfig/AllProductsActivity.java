@@ -28,6 +28,7 @@ import java.util.TreeSet;
 import Models.AdvancedNotificationData;
 import Models.AnalyticsManager;
 import Models.Dare;
+import Models.DareCoins;
 import Models.DaresAdapter;
 import Models.UserDetails;
 
