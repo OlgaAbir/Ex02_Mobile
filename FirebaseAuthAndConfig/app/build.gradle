@@ -43,7 +43,7 @@ dependencies {
     implementation 'com.appsee:appsee-android:+'
 
 
-
+    implementation 'com.android.billingclient:billing:1.1'
     implementation 'com.android.support:recyclerview-v7:26.1.1'
 }
 apply plugin: 'com.google.gms.google-services'

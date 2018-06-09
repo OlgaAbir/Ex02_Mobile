@@ -2,9 +2,6 @@ package Models;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,10 +11,6 @@ import android.widget.TextView;
 
 import com.deanoy.user.firebaseauthandconfig.DareDetailsActivity;
 import com.deanoy.user.firebaseauthandconfig.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 public class DareViewHolder extends RecyclerView.ViewHolder{
 

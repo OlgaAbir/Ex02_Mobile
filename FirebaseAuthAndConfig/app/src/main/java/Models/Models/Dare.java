@@ -4,12 +4,8 @@ package Models;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 // An object that represents a dare between 2 users.
 public class Dare implements Parcelable {
