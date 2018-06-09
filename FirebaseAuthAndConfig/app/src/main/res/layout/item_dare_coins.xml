@@ -46,12 +46,12 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/gold-coins"
+                android:src="@drawable/goldcoins"
                 app:srcCompat="@mipmap/ic_launcher_round"
                 card_view:layout_constraintBottom_toBottomOf="parent"
                 card_view:layout_constraintLeft_toLeftOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent"
-                card_view:srcCompat="@drawable/gold-coins" />
+                 />
 
             <TextView
                 android:id="@+id/tvAmount"
