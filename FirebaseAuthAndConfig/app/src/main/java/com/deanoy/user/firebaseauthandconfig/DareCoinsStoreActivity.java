@@ -40,10 +40,10 @@ public class DareCoinsStoreActivity extends Activity {
         mDareCoinsAdapter = new DareCoinsAdapter(mDareCoinsList);
         mDareCoinsProductsView.setAdapter(mDareCoinsAdapter);
 
-        getDareCoinsFromDB();
+        getDareCoinsProductsFromDB();
     }
 
-    private void getDareCoinsFromDB()
+    private void getDareCoinsProductsFromDB()
     {
 
     }
