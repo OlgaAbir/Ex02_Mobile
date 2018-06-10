@@ -1,6 +1,7 @@
 package com.deanoy.user.firebaseauthandconfig;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.Purchase;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,18 +24,22 @@ import java.util.List;
 import Models.BillingManager;
 import Models.DareCoins;
 import Models.DareCoinsAdapter;
+import Models.UserDetails;
+
 public class DareCoinsStoreActivity extends Activity implements BillingManager.BillingUpdatesListener {
 
     private static final String TAG = "DareCoinsActivity";
+    private static String USER_DETAILS_DATA = "user_details";
 
-    public final static String _1NIS_CREDIT = "1nis_credit";
-    public final static String _2NIS_CREDIT = "2nis_credit";
-    public final static String _3NIS_CREDIT = "3nis_credit";
+    public final static String _4NIS_CREDIT = "4nis_credit";
+    public final static String _8NIS_CREDIT = "8nis_credit";
+    public final static String _12NIS_CREDIT = "12nis_credit";
 
     private static BillingManager mBillingManager;
     private RecyclerView mDareCoinsProductsView;
     private DareCoinsAdapter mDareCoinsAdapter;
     private List<DareCoins> mDareCoinsList = new ArrayList<>();
+    private UserDetails mUserDetails;
 
     private DatabaseReference mCoinsDatabaseRef = FirebaseDatabase.getInstance().getReference("Coins");
 
@@ -51,6 +57,10 @@ public class DareCoinsStoreActivity extends Activity implements BillingManager.B
         mDareCoinsProductsView.setHasFixedSize(true);
         mDareCoinsProductsView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         mDareCoinsProductsView.setItemAnimator(new DefaultItemAnimator());
+
+        // Get user details
+        Bundle extras = getIntent().getExtras();
+        mUserDetails = extras.getParcelable(USER_DETAILS_DATA);
 
         getAllCoinsProducts();
         Log.e(TAG, "onCreate() <<" );
@@ -102,18 +112,17 @@ public class DareCoinsStoreActivity extends Activity implements BillingManager.B
 
         Log.e(TAG,"onConsumeFinished() >> result:"+result+" ,token:"+token);
 
-
         if (result == BillingClient.BillingResponse.OK) {
-            displayMessage("Product with token:"+ token+ " was consumed successfully");
+            Log.e(TAG, "Product with token:"+ token+ " was consumed successfully");
         } else {
-            displayMessage("Error consuming product with token:" + token + " , error code:"+result);
+            Log.e(TAG, "Unable to purchase Product with token:" + token + ". Error code: " + result);
         }
 
         Log.e(TAG,"onConsumeFinished() <<");
 
     }
 
-    public void onPurchasesUpdated(int resultCode,List<Purchase> purchases){
+    public void onPurchasesUpdated(int resultCode, List<Purchase> purchases){
 
         Log.e(TAG,"onPurchasesUpdated() >> ");
 
@@ -125,14 +134,13 @@ public class DareCoinsStoreActivity extends Activity implements BillingManager.B
         for (Purchase purchase : purchases) {
             Log.e(TAG, "onPurchasesUpdated() >> " + purchase.toString());
 
-            displayMessage("onPurchasesUpdated() >> " + purchase.getSku());
-
             if (purchase.getSku().contains("credit")) {
                 Log.e(TAG, "onPurchasesUpdated() >> consuming " + purchase.getSku());
                 //Only consume  one time product (subscription can't be consumed).
                 mBillingManager.consumeAsync(purchase.getPurchaseToken());
+                updateBalance(purchase.getSku());
             }
-            //Update the server...
+
         }
 
         Log.e(TAG,"onPurchasesUpdated() <<");
@@ -144,23 +152,42 @@ public class DareCoinsStoreActivity extends Activity implements BillingManager.B
         String product;
         String sku = BillingClient.SkuType.INAPP;
 
-        if(productPrice.equals("Price: 1 NIS"))
+        if(productPrice.equals("Price: 4 NIS"))
         {
-            product = _1NIS_CREDIT;
+            product = _4NIS_CREDIT;
         }
-        else if(productPrice.equals("Price: 2 NIS"))
+        else if(productPrice.equals("Price: 8 NIS"))
         {
-            product = _2NIS_CREDIT;
+            product = _8NIS_CREDIT;
         }
         else
         {
-            product = _3NIS_CREDIT;
+            product = _12NIS_CREDIT;
         }
 
         mBillingManager.initiatePurchaseFlow(product,sku);
     }
 
-    public void displayMessage(String msg) {
-        Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
+    private void updateBalance(String orderId) {
+        int balanceToAdd;
+
+        if(orderId.equals("4nis_credit"))
+        {
+            balanceToAdd = 50;
+        }
+        else if(orderId.equals("8nis_credit"))
+        {
+            balanceToAdd = 120;
+        }
+        else
+        {
+            balanceToAdd = 200;
+        }
+
+        Log.e(TAG,"updateBalance() >> Adding " + balanceToAdd + "credits to user");
+
+        mUserDetails.setBalance(mUserDetails.getBalance() + balanceToAdd);
+        DatabaseReference userDetailsDatabaseRef = FirebaseDatabase.getInstance().getReference("UserDetails").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        userDetailsDatabaseRef.setValue(mUserDetails);
     }
 }

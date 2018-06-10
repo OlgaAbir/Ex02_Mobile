@@ -75,7 +75,7 @@ public class BillingManager implements PurchasesUpdatedListener {
      * want to make it easy for an attacker to replace the public key with one
      * of their own and then fake messages from the server.
      */
-    private static final String BASE_64_ENCODED_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkRASO558biskUCv/0YP9Vgd//zxUd4WFKeBelfq+whY0UAKB+7OJHqD/P9XdHNqwNUGjZ3q17FEfeUIIVa1fXNK59xQHoNQi1gMVsPLQ7972WEEoWhI16fbUpn0xsVBH040ilozm3sGhDBIqHZ4l9fQtkVeDnXDkpVLgbAzvnTlMpdw9wJZWvdcUzOAcc5O5MNnnFa+w83UsWeS62CX9j6xAnaoVlgOQN+WlS/KpGbHpOdjpqPIaMmDuNoxK/RgHuT/YktGYg13tLQS2ASjYDUkz1crMJZECuI4ybpTpoyu5OtHEEaU7EyHhR/9axH6CwKWtF0REeMS1Cko1EoM6LwIDAQAB";
+    private static final String BASE_64_ENCODED_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtH1M8VwPTpG8y8blhiX3DzVEQCC0f+MoqcVZ3YGSjFxCtdQ2lF49cV4SHi9EoFOtM2kFVv2bRNKDx8xWOe62BfSezmYzrjygNxP++7Ym0gqBtvHzF3JeYmYzESHkmvTsUSaCG38XMVFBhH3tqr4jTPDKxxUieb/2D1BACaXy9mp09WVT3Xr3FUMAYSJDd2rv1SerZ01Iicfb2fbhDlwfE5tdgVuMuNRmtwEFFTBY7udyokgavQefgstLWY3Rrq290E0O7WqwGB6zSCc5bAzX3f9pY99EqT4v6ksw6H0bKclcKZf2SZJWgzEiSgsAB61bICZtoWgp63zl+CFrJXtgJQIDAQAB";
 
     /**
      * Listener to the updates that happen when purchases list was updated or consumption of the
@@ -131,7 +131,7 @@ public class BillingManager implements PurchasesUpdatedListener {
             Log.w(TAG, "onPurchasesUpdated() got unknown resultCode: " + resultCode);
         }
 
-        mBillingUpdatesListener.onPurchasesUpdated(resultCode,mPurchases);
+        mBillingUpdatesListener.onPurchasesUpdated(resultCode, mPurchases);
     }
 
     /**
@@ -152,6 +152,7 @@ public class BillingManager implements PurchasesUpdatedListener {
                 Log.d(TAG, "Launching in-app purchase flow. Replace old SKU? " + (oldSkus != null));
                 BillingFlowParams purchaseParams = BillingFlowParams.newBuilder()
                         .setSku(skuId).setType(billingType).setOldSkus(oldSkus).build();
+
                 mBillingClient.launchBillingFlow(mActivity, purchaseParams);
             }
         };
@@ -171,8 +172,6 @@ public class BillingManager implements PurchasesUpdatedListener {
             mBillingClient = null;
         }
     }
-
-
 
     public void consumeAsync(final String purchaseToken) {
         // If we've already scheduled to consume this token - no action is needed (this could happen
@@ -269,13 +268,6 @@ public class BillingManager implements PurchasesUpdatedListener {
      * </p>
      */
     private boolean verifyValidSignature(String signedData, String signature) {
-        // Some sanity checks to see if the developer (that's you!) really followed the
-        // instructions to run this sample (don't put these checks on your app!)
-        if (BASE_64_ENCODED_PUBLIC_KEY.contains("CONSTRUCT_YOUR")) {
-            throw new RuntimeException("Please update your app's public key at: "
-                    + "BASE_64_ENCODED_PUBLIC_KEY");
-        }
-
         try {
             return verifyPurchase(BASE_64_ENCODED_PUBLIC_KEY, signedData, signature);
         } catch (IOException e) {

@@ -37,6 +37,7 @@ public class UserProfileActivity extends Activity {
     private static String TAG = "UserProfileActivity";
     private static String FACEBOOK_AUTH = "facebook.com";
     private static String GMAIL_AUTH = "google.com";
+    private static String USER_DETAILS_DATA = "user_details";
 
     private FirebaseAuth mAuth;
     private FirebaseUser mLoggedInUser;
@@ -215,6 +216,9 @@ public class UserProfileActivity extends Activity {
     public void onBuyDareCoinsClick(View v)
     {
         Intent i = new Intent(getApplicationContext(), DareCoinsStoreActivity.class);
+        Bundle extras = new Bundle();
+        extras.putParcelable(USER_DETAILS_DATA, mUserDetails);
+        i.putExtras(extras);
 
         startActivity(i);
     }

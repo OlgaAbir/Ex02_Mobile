@@ -26,7 +26,6 @@ public class DareCoinsViewHolder extends RecyclerView.ViewHolder {
         mbtnBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                DareCoinsStoreActivity.BuyCoins(mtvPrice.getText().toString());
             }
         });
