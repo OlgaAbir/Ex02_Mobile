@@ -1,13 +1,18 @@
 package Models;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.deanoy.user.firebaseauthandconfig.DareCoinsStoreActivity;
+import com.deanoy.user.firebaseauthandconfig.MainActivity;
 import com.deanoy.user.firebaseauthandconfig.R;
+import com.facebook.login.LoginManager;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class DareCoinsViewHolder extends RecyclerView.ViewHolder {
 
@@ -26,7 +31,17 @@ public class DareCoinsViewHolder extends RecyclerView.ViewHolder {
         mbtnBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               DareCoinsStoreActivity.BuyCoins(mtvPrice.getText().toString());
+                if(FirebaseAuth.getInstance().getCurrentUser().isAnonymous())
+                {
+                    Toast.makeText(view.getContext(), "Please sign in/sign up to continue", Toast.LENGTH_LONG).show();
+                    FirebaseAuth.getInstance().signOut();
+                    LoginManager.getInstance().logOut();
+                    Intent i = new Intent(view.getContext() ,MainActivity.class);
+                    view.getContext().startActivity(i);
+                }
+                else {
+                    DareCoinsStoreActivity.BuyCoins(mtvPrice.getText().toString());
+                }
             }
         });
     }
