@@ -31,7 +31,7 @@ public class DareCoinsStoreActivity extends Activity implements BillingManager.B
     private static final String TAG = "DareCoinsActivity";
     private static String USER_DETAILS_DATA = "user_details";
 
-    public final static String _4NIS_CREDIT = "4nis_credit";
+    public final static String _4NIS_CREDIT = "nis_credit_4";
     public final static String _8NIS_CREDIT = "8nis_credit";
     public final static String _12NIS_CREDIT = "12nis_credit";
 
@@ -171,11 +171,11 @@ public class DareCoinsStoreActivity extends Activity implements BillingManager.B
     private void updateBalance(String orderId) {
         int balanceToAdd;
 
-        if(orderId.equals("4nis_credit"))
+        if(orderId.equals(_4NIS_CREDIT))
         {
             balanceToAdd = 50;
         }
-        else if(orderId.equals("8nis_credit"))
+        else if(orderId.equals(_8NIS_CREDIT))
         {
             balanceToAdd = 120;
         }
