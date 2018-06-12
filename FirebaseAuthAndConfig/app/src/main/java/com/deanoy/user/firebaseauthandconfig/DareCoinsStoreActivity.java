@@ -17,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import Models.BillingManager;
@@ -31,7 +32,7 @@ public class DareCoinsStoreActivity extends Activity implements BillingManager.B
 
     public final static String _4NIS_CREDIT = "nis_credit_4";
     public final static String _8NIS_CREDIT = "8nis_credit";
-    public final static String _12NIS_CREDIT = "12nis_credit";
+    public final static String _12NIS_CREDIT = "nis_credit_12";
 
     private static BillingManager mBillingManager;
     private RecyclerView mDareCoinsProductsView;
@@ -137,9 +138,24 @@ public class DareCoinsStoreActivity extends Activity implements BillingManager.B
                 //Only consume  one time product (subscription can't be consumed).
                 mBillingManager.consumeAsync(purchase.getPurchaseToken());
                 updateBalance(purchase.getSku());
+                recordTransaction(purchase);
             }
 
         }
+
+        Log.e(TAG,"onPurchasesUpdated() <<");
+    }
+
+    private void recordTransaction(Purchase purchase) {
+        Log.e(TAG,"onPurchasesUpdated() >> for purchase " + purchase);
+
+        DatabaseReference purchaseTransactionRef = FirebaseDatabase.getInstance().getReference("Purchase").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        String purchaseKey = purchaseTransactionRef.push().getKey();
+        purchaseTransactionRef.child(purchaseKey).child("time_of_purchase").setValue(purchase.getPurchaseTime());
+        purchaseTransactionRef.child(purchaseKey).child("sku").setValue(purchase.getSku());
+        purchaseTransactionRef.child(purchaseKey).child("order_id").setValue(purchase.getOrderId());
+        purchaseTransactionRef.child(purchaseKey).child("purchase_token").setValue(purchase.getPurchaseToken());
+        purchaseTransactionRef.child(purchaseKey).child("amount").setValue(1);
 
         Log.e(TAG,"onPurchasesUpdated() <<");
     }
