@@ -24,4 +24,10 @@
         android:text="Team Members:\n Olga Abir, \n Idan Fanous, \n Dean Winchester"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
 
+    <TextView
+        android:id="@+id/tvVersionInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" />
+
 </LinearLayout>
